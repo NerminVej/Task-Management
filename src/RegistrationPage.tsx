@@ -1,11 +1,12 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 
 const RegistrationPage: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [repeatedPassword, setRepeatedPassword] = useState<string>("");
-
+  const [passwordStrength, setPasswordStrength] = useState<string>("");
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,10 +19,9 @@ const RegistrationPage: React.FC = () => {
         console.log("Form submitted successfully");
       } else {
         console.log("Invalid Email address entered. Please enter a real one.");
-        
       }
     }
-    // Handle form submission and validation here
+    
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,20 +33,29 @@ const RegistrationPage: React.FC = () => {
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    // We check the password strength here
+    const passwordStrength = checkPasswordStrength(newPassword);
+    // Call the updater function to update the visual indicator.
+    setPasswordStrength(passwordStrength);
+    updatePasswordStrengthIndicator(passwordStrength);
   };
   const handleRepeatedPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRepeatedPassword(e.target.value);
   };
 
+  function updatePasswordStrengthIndicator(strength: string) {}
 
   function checkPasswordStrength(password: string): string {
-    if (password.length < 8) {
+    if (password.length < 4) {
+      return "nonexistent";
+    } else if (password.length < 8) {
       return "weak";
     } else if (password.length <= 12) {
       return "good";
     } else if (password.length > 12) {
-      return "Optimal";
+      return "optimal";
     } else {
       return "error";
     }
@@ -110,7 +119,7 @@ const RegistrationPage: React.FC = () => {
               className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
             />
           </div>
-          
+
           <div>
             <label
               htmlFor="password"
@@ -125,6 +134,9 @@ const RegistrationPage: React.FC = () => {
               onChange={handleRepeatedPasswordChange}
               className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
             />
+            <div className="top-2">
+              <PasswordStrengthIndicator strength={passwordStrength} />
+            </div>
           </div>
 
           <button
