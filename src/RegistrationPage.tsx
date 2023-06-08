@@ -4,11 +4,23 @@ const RegistrationPage: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [repeatedPassword, setRepeatedPassword] = useState<string>("");
+
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO I can call the password checker function and check if the password is strong enough
-
+    const passwordStrength = checkPasswordStrength(password);
+    if (passwordStrength === "weak") {
+      console.log("Weak password! Please choose a stronger password.");
+    } else {
+      // If it is a valid email then it should submit the form
+      if (isEmailValid(email)) {
+        console.log("Form submitted successfully");
+      } else {
+        console.log("Invalid Email address entered. Please enter a real one.");
+        
+      }
+    }
     // Handle form submission and validation here
   };
 
@@ -23,6 +35,10 @@ const RegistrationPage: React.FC = () => {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+  const handleRepeatedPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setRepeatedPassword(e.target.value);
+  };
+
 
   function checkPasswordStrength(password: string): string {
     if (password.length < 8) {
@@ -34,6 +50,12 @@ const RegistrationPage: React.FC = () => {
     } else {
       return "error";
     }
+  }
+
+  function isEmailValid(email: string): boolean {
+    // regex to validate if an email address is valid or not.
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   return (
@@ -85,6 +107,22 @@ const RegistrationPage: React.FC = () => {
               type="password"
               value={password}
               onChange={handlePasswordChange}
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+            />
+          </div>
+          
+          <div>
+            <label
+              htmlFor="password"
+              className="block font-medium text-primary"
+            >
+              Confirm Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={repeatedPassword}
+              onChange={handleRepeatedPasswordChange}
               className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
             />
           </div>
