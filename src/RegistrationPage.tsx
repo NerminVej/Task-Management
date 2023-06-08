@@ -47,19 +47,37 @@ const RegistrationPage: React.FC = () => {
 
   function updatePasswordStrengthIndicator(strength: string) {}
 
+  // This is the password strength checker. We can improve upon this
+  // We can set up more validations and give the user inputs to what is missing inside of the password.
   function checkPasswordStrength(password: string): string {
-    if (password.length < 4) {
-      return "nonexistent";
-    } else if (password.length < 8) {
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+  
+    if (password.length < 8) {
       return "weak";
-    } else if (password.length <= 12) {
+    } else if (
+      password.length >= 8 &&
+      password.length <= 12 &&
+      hasSpecialChar &&
+      hasNumber &&
+      (hasLowerCase || hasUpperCase)
+    ) {
       return "good";
-    } else if (password.length > 12) {
-      return "optimal";
+    } else if (
+      password.length > 12 &&
+      hasSpecialChar &&
+      hasNumber &&
+      hasLowerCase &&
+      hasUpperCase
+    ) {
+      return "strong";
     } else {
-      return "error";
+      return "invalid";
     }
   }
+  
 
   function isEmailValid(email: string): boolean {
     // regex to validate if an email address is valid or not.

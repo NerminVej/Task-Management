@@ -3,52 +3,26 @@ import React from "react";
 const PasswordStrengthIndicator: React.FC<{ strength: string }> = ({
   strength,
 }) => {
-  if (strength === "weak") {
-    return (
-      <div>
-        <h1>Password Strength {strength}</h1>
-        <progress
-          className="progress progress-accent w-56"
-          value="20"
-          max="100"
-        ></progress>
-      </div>
-    );
-  } else if (strength === "good") {
-    return (
-      <div>
-        <h1>Password Strength {strength}</h1>
-        <progress
-          className="progress progress-accent w-56"
-          value="50"
-          max="100"
-        ></progress>
-      </div>
-    );
-  } else if (strength === "optimal") {
-    return (
-      <div>
-        <h1>Password Strength {strength}</h1>
+  let progressValue = 0;
 
-        <progress
-          className="progress progress-accent w-56"
-          value="70"
-          max="100"
-        ></progress>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h1>Password Strength {strength}</h1>
-        <progress
-          className="progress progress-accent w-56"
-          value="0"
-          max="100"
-        ></progress>
-      </div>
-    );
+  if (strength === "weak") {
+    progressValue = 20;
+  } else if (strength === "good") {
+    progressValue = 50;
+  } else if (strength === "strong") {
+    progressValue = 70;
   }
+
+  return (
+    <div>
+      <h1>Password Strength {strength}</h1>
+      <progress
+        className="progress progress-accent w-56"
+        value={progressValue}
+        max="100"
+      ></progress>
+    </div>
+  );
 };
 
 export default PasswordStrengthIndicator;
