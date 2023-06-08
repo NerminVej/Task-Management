@@ -7,6 +7,7 @@ const RegistrationPage: React.FC = () => {
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // TODO I can call the password checker function and check if the password is strong enough
 
     // Handle form submission and validation here
   };
