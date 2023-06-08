@@ -14,7 +14,7 @@ const RegistrationPage = () => {
     <div>
       <button class="btn btn-primary">Button</button>
       <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full max-w-xs  bg-orange-600 m-5" />
-      <button class="btn w-64 rounded-full bg-blue-700">Button</button>
+      <button class="btn w-64 rounded-full">Button</button>
     </div>
   );
 
