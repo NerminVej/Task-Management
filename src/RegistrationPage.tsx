@@ -7,6 +7,7 @@ const RegistrationPage: React.FC = () => {
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     // Handle form submission and validation here
   };
 
@@ -22,11 +23,28 @@ const RegistrationPage: React.FC = () => {
     setPassword(e.target.value);
   };
 
+  function checkPasswordStrength(password: string): string {
+    if (password.length < 8) {
+      return "weak";
+    } else if (password.length <= 12) {
+      return "good";
+    } else if (password.length > 12) {
+      return "Optimal";
+    } else {
+      return "error";
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen ">
-      <form onSubmit={handleFormSubmit} className="p-4 bg-white rounded-md shadow-md">
+      <form
+        onSubmit={handleFormSubmit}
+        className="p-4 bg-white rounded-md shadow-md"
+      >
         <div className="space-y-4">
-          <h1 className="text-accent text-center">Login for the Task Management Application</h1>
+          <h1 className="text-accent text-center">
+            Login for the Task Management Application
+          </h1>
 
           <div>
             <label htmlFor="name" className="block font-medium text-primary">
@@ -55,7 +73,10 @@ const RegistrationPage: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block font-medium text-primary">
+            <label
+              htmlFor="password"
+              className="block font-medium text-primary"
+            >
               Password
             </label>
             <input
