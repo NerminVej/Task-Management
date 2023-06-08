@@ -37,7 +37,7 @@ const RegistrationPage: React.FC = () => {
               type="text"
               value={name}
               onChange={handleNameChange}
-              className="input input-bordered focus:ring-secondary text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered bg-gray-100 focus:ring-secondary text-secondary border-secondary rounded-md px-4 py-2 "
             />
           </div>
 
@@ -50,7 +50,7 @@ const RegistrationPage: React.FC = () => {
               type="email"
               value={email}
               onChange={handleEmailChange}
-              className="input input-bordered focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
             />
           </div>
 
@@ -63,7 +63,7 @@ const RegistrationPage: React.FC = () => {
               type="password"
               value={password}
               onChange={handlePasswordChange}
-              className="input input-bordered focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
             />
           </div>
 
