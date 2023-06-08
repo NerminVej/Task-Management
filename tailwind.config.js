@@ -3,7 +3,13 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#008080",
+        secondary: "#FF7F50",
+        accent: "#32CD32"
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
