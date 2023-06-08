@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./index.css"
 
 const RegistrationPage = () => {
   const [name, setName] = useState("");
@@ -12,11 +13,11 @@ const RegistrationPage = () => {
 
   return (
     <div>
-      <button className="btn">fdsfdsfsd</button>
+      <button class="btn btn-primary">Button</button>
+      <input type="text" placeholder="Type here" class="input input-bordered input-primary w-full max-w-xs  bg-orange-600" />
     </div>
   );
-  
-  
+
   /*
   return (
     <form onSubmit={handleFormSubmit}>
