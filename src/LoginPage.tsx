@@ -1,5 +1,4 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 
 interface LoginForm {
   email: string;
@@ -33,41 +32,47 @@ const LoginPage: React.FC = () => {
             Login for the Task Management Application
           </h1>
 
-          <div>
-            <label htmlFor="email" className="block font-medium text-primary">
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block font-medium text-primary text-left"
+            >
               Email
             </label>
             <input
               id="email"
               type="email"
+              name="email"
               value={loginForm.email}
               onChange={handleInputChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-20 py-2"
             />
           </div>
 
-          <div>
+          <div className="mb-4">
             <label
               htmlFor="password"
-              className="block font-medium text-primary"
+              className="block font-medium text-primary text-left"
             >
               Password
             </label>
             <input
               id="password"
               type="password"
+              name="password"
               value={loginForm.password}
               onChange={handleInputChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2 px-20"
             />
           </div>
-
-          <button
-            type="submit"
-            className="btn bg-secondary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
-          >
-            Login
-          </button>
+          <div className="flex justify-center items-center">
+            <button
+              type="submit"
+              className="btn bg-primary text-white font-medium px-20 py-2 rounded-md shadow-md hover:bg-opacity-90 "
+            >
+              Login
+            </button>
+          </div>
         </div>
       </form>
     </div>
