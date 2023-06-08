@@ -42,6 +42,7 @@
     ]
   },
   "devDependencies": {
-    "daisyui": "^3.0.20"
+    "daisyui": "^3.0.20",
+    "typescript": "^5.1.3"
   }
 }
