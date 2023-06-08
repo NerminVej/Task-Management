@@ -11,6 +11,16 @@ const RegistrationPage = () => {
   };
 
   return (
+    <div>
+      <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md">
+        sdf
+      </button>
+    </div>
+  );
+  
+  
+  /*
+  return (
     <form onSubmit={handleFormSubmit}>
       <button className="p-4 m-4 px-8 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">
         Button Text
@@ -65,6 +75,7 @@ const RegistrationPage = () => {
       </div>
     </form>
   );
+  */
 };
 
 export default RegistrationPage;
