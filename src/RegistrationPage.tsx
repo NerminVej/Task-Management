@@ -21,7 +21,6 @@ const RegistrationPage: React.FC = () => {
         console.log("Invalid Email address entered. Please enter a real one.");
       }
     }
-    
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +53,7 @@ const RegistrationPage: React.FC = () => {
     const hasNumber = /\d/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasUpperCase = /[A-Z]/.test(password);
-  
+
     if (password.length < 8) {
       return "weak";
     } else if (
@@ -77,7 +76,6 @@ const RegistrationPage: React.FC = () => {
       return "invalid";
     }
   }
-  
 
   function isEmailValid(email: string): boolean {
     // regex to validate if an email address is valid or not.
@@ -86,14 +84,14 @@ const RegistrationPage: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen ">
+    <div className="flex items-center justify-center min-h-screen">
       <form
         onSubmit={handleFormSubmit}
         className="p-4 bg-white rounded-md shadow-md"
       >
         <div className="space-y-4">
           <h1 className="text-accent text-center">
-            Login for the Task Management Application
+            Sign up for the Task Management Application
           </h1>
 
           <div>

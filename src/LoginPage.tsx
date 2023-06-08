@@ -1,56 +1,74 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 
-// Defining the shape of the LoginForm data where we need email and password.
 interface LoginForm {
   email: string;
   password: string;
 }
 
-// React.FC to signal that it is a funcitonal component.
 const LoginPage: React.FC = () => {
   const [loginForm, setLoginForm] = useState<LoginForm>({
     email: "",
     password: "",
   });
 
-  // When an input value changes the handleInputChange function updates the loginform state object.
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // setLoginForm takes in the prevForm and then overwrites the property with the name variable with the new value variable.
     setLoginForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Perform login logic with loginForm.email and loginForm.password
     console.log("Form submitted:", loginForm);
   };
 
   return (
-    <div className="login-page">
-      <h1>Login Page</h1>
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={loginForm.email}
-            onChange={handleInputChange}
-          />
+    <div className="flex items-center justify-center min-h-screen">
+      <form
+        onSubmit={handleFormSubmit}
+        className="p-4 bg-white rounded-md shadow-md"
+      >
+        <div className="space-y-4">
+          <h1 className="text-accent text-center">
+            Login for the Task Management Application
+          </h1>
+
+          <div>
+            <label htmlFor="email" className="block font-medium text-primary">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={loginForm.email}
+              onChange={handleInputChange}
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block font-medium text-primary"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={loginForm.password}
+              onChange={handleInputChange}
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn bg-secondary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
+          >
+            Login
+          </button>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={loginForm.password}
-            onChange={handleInputChange}
-          />
-        </div>
-        <button type="submit">Login</button>
       </form>
     </div>
   );
