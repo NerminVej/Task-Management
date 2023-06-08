@@ -12,6 +12,10 @@ const RegistrationPage = () => {
 
   return (
     <form onSubmit={handleFormSubmit}>
+      <button className="p-4 m-4 px-8 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">
+        Button Text
+      </button>
+
       <div className="w-6">
         <div className="mb-4">
           <label htmlFor="name" className="block font-medium text-gray-700">
