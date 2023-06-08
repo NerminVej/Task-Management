@@ -13,8 +13,10 @@ const LoginPage: React.FC = () => {
     password: "",
   });
 
+  // When an input value changes the handleInputChange function updates the loginform state object.
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    // setLoginForm takes in the prevForm and then overwrites the property with the name variable with the new value variable.
     setLoginForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
