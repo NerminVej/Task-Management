@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-500">
       <form
         onSubmit={handleFormSubmit}
         className="p-4 bg-white rounded-md shadow-md"
