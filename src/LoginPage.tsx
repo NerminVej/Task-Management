@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
               name="password"
               value={loginForm.password}
               onChange={handleInputChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2 px-20"
+              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md py-2 px-20"
             />
           </div>
           <div className="flex justify-center items-center">
