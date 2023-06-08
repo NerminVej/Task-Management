@@ -12,10 +12,11 @@ const RegistrationPage = () => {
 
   return (
     <form onSubmit={handleFormSubmit} className="p-4">
-
       <div className="space-y-4 flex flex-col items-center justify-center">
+        <h1 className="text-accent">Login for the Task Management Application</h1>
+
         <div>
-          <label htmlFor="name" className="block font-medium  text-primary">
+          <label htmlFor="name" className="block font-medium text-primary">
             Name
           </label>
           <input
@@ -23,12 +24,12 @@ const RegistrationPage = () => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="input input-bordered focus:ring-secondary text-secondary border-secondary"
+            className="input input-bordered focus:ring-secondary text-secondary border-secondary rounded-md px-4 py-2"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block font-medium  text-primary">
+          <label htmlFor="email" className="block font-medium text-primary">
             Email
           </label>
           <input
@@ -36,7 +37,7 @@ const RegistrationPage = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="input input-bordered focus:ring-indigo-500 text-secondary border-secondary"
+            className="input input-bordered focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
           />
         </div>
 
@@ -49,13 +50,13 @@ const RegistrationPage = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="input input-bordered focus:ring-indigo-500 text-secondary border-secondary"
+            className="input input-bordered focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
           />
         </div>
 
         <button
           type="submit"
-          className="btn bg-secondary"
+          className="btn bg-secondary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
         >
           Sign Up
         </button>
