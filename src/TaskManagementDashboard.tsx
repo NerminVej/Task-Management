@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import CustomNotification from "./CustomNotification";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import "./tailwind.css";
 
 interface Task {
@@ -164,6 +166,10 @@ const TaskManagementDashboard: React.FC = () => {
   
   
 
+  function handleDeleteTask(id: number): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="container mx-auto px-4">
       {/* Notifications */}
@@ -176,7 +182,7 @@ const TaskManagementDashboard: React.FC = () => {
         />
       ))}
       {/* Task Management Dashboard */}
-      <h1 className="text-primary text-4xl font-bold my-4  text-center">Task Management Dashboard</h1>
+      <h1 className="text-primary text-2xl font-bold my-4">Task Management Dashboard</h1>
       <table className="w-full bg-green-100 border border-gray-200 rounded shadow">
         {/* Table Header */}
         <thead>
@@ -188,6 +194,7 @@ const TaskManagementDashboard: React.FC = () => {
             <th className="py-3 px-4 bg-primary text-white font-bold">Comments</th>
             <th className="py-3 px-4 bg-primary text-white font-bold">Attachments</th>
             <th className="py-3 px-4 bg-primary text-white font-bold">Time Tracking</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Actions</th>
           </tr>
         </thead>
         {/* Table Body */}
@@ -227,7 +234,7 @@ const TaskManagementDashboard: React.FC = () => {
                 <ul className="list-disc pl-4">
                   {task.attachments.map((attachment, index) => (
                     <li key={index}>
-                      <a href={attachment} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                      <a href={attachment} target="_blank" rel="noopener noreferrer">
                         Attachment {index + 1}
                       </a>
                     </li>
@@ -235,6 +242,15 @@ const TaskManagementDashboard: React.FC = () => {
                 </ul>
               </td>
               <td className="py-3 px-4 border-b">{task.timeTracking}</td>
+              {/* Delete Button */}
+              <td className="py-3 px-4 border-b">
+                <button
+                  className="text-red-500 hover:text-red-700"
+                  onClick={() => handleDeleteTask(task.id)}
+                >
+                  <FontAwesomeIcon icon={faTrashAlt} />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
