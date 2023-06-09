@@ -66,30 +66,39 @@ const TaskManagementDashboard: React.FC = () => {
     );
   };
 
-  const handleTimeTrackingChange = (id: number, timeTracking: number) => {
+  const handleTimeTrackingChange = (
+    id: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
     setTaskList((prevTasks) =>
       prevTasks.map((task) => {
         if (task.id === id) {
-          return { ...task, timeTracking };
+          return { ...task, timeTracking: Number(value) };
         }
-
         return task;
       })
     );
   };
 
-  const handleAttachmentUpload = (id: number, files: FileList) => {
-    const attachments = Array.from(files).map((file) => file.name);
-
-    setTaskList((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, attachments };
-        }
-
-        return task;
-      })
-    );
+  const handleAttachmentUpload = (id: number, files: FileList | null) => {
+    if (files) {
+      const attachments: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        attachments.push(files[i].name);
+      }
+      setTaskList((prevTasks) =>
+        prevTasks.map((task) => {
+          if (task.id === id) {
+            return {
+              ...task,
+              attachments: [...task.attachments, ...attachments],
+            };
+          }
+          return task;
+        })
+      );
+    }
   };
 
   return (
@@ -158,7 +167,7 @@ const TaskManagementDashboard: React.FC = () => {
                   type="number"
                   value={task.timeTracking}
                   onChange={(e) =>
-                    handleTimeTrackingChange(task.id, parseInt(e.target.value))
+                    handleTimeTrackingChange(task.id, e)
                   }
                 />
               </td>
