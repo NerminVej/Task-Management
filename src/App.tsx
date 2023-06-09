@@ -3,6 +3,7 @@ import RegistrationPage from "./RegistrationPage";
 import LoginPage from "./LoginPage";
 import TaskCreationPage from "./TaskCreationPage";
 import TaskManagementDashboard from "./TaskManagementDashboard";
+import NotificationCenter from "./NotificationCenter";
 
 
 function App() {
