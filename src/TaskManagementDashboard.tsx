@@ -166,6 +166,7 @@ const TaskManagementDashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4">
+      {/* Notifications */}
       {notifications.map((notification) => (
         <CustomNotification
           key={notification.id}
@@ -174,76 +175,74 @@ const TaskManagementDashboard: React.FC = () => {
           timestamp={notification.timestamp}
         />
       ))}
-      <h1 className="text-primary text-2xl font-bold my-4">
-        Task Management Dashboard
-      </h1>
-      <table className="task-table w-full">
+      {/* Task Management Dashboard */}
+      <h1 className="text-primary text-4xl font-bold my-4  text-center">Task Management Dashboard</h1>
+      <table className="w-full bg-green-100 border border-gray-200 rounded shadow">
+        {/* Table Header */}
         <thead>
           <tr>
-            <th className="py-2">ID</th>
-            <th className="py-2">Title</th>
-            <th className="py-2">Status</th>
-            <th className="py-2">Progress</th>
-            <th className="py-2">Comments</th>
-            <th className="py-2">Attachments</th>
-            <th className="py-2">Time Tracking</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">ID</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Title</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Status</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Progress</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Comments</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Attachments</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">Time Tracking</th>
           </tr>
         </thead>
+        {/* Table Body */}
         <tbody>
           {taskList.map((task) => (
             <tr key={task.id}>
-              <td className="py-2">{task.id}</td>
-              <td className="py-2">{task.title}</td>
-              <td className="py-2">
+              {/* Individual Task Data */}
+              <td className="py-3 px-4 border-b">{task.id}</td>
+              <td className="py-3 px-4 border-b">{task.title}</td>
+              <td className="py-3 px-4 border-b">
                 <select
                   value={task.status}
                   onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                  className="py-1 px-2 rounded border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
                 >
                   <option value="Completed">Completed</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Pending">Pending</option>
                 </select>
               </td>
-              <td className="py-2">
-                <div className="progress-bar h-4 bg-gray-200 rounded">
+              <td className="py-3 px-4 border-b">
+                <div className="w-full h-2 bg-gray-200 rounded">
                   <div
-                    className="progress-bar-fill h-full bg-primary rounded"
+                    className={`h-full bg-primary rounded ${task.progress === 100 ? "bg-green-500" : ""}`}
                     style={{ width: `${task.progress}%` }}
                   ></div>
                 </div>
               </td>
-              <td className="py-2">
-                <ul>
+              <td className="py-3 px-4 border-b">
+                <ul className="list-disc pl-4">
                   {task.comments.map((comment, index) => (
                     <li key={index}>{comment}</li>
                   ))}
                 </ul>
               </td>
-              <td className="py-2">
-                <ul>
+              <td className="py-3 px-4 border-b">
+                <ul className="list-disc pl-4">
                   {task.attachments.map((attachment, index) => (
-                    <li key={index}>{attachment}</li>
+                    <li key={index}>
+                      <a href={attachment} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                        Attachment {index + 1}
+                      </a>
+                    </li>
                   ))}
                 </ul>
-                <input
-                  type="file"
-                  
-                  multiple
-                />
               </td>
-              <td className="py-2">
-                <input
-                  type="number"
-                  value={task.timeTracking}
-                  
-                />
-              </td>
+              <td className="py-3 px-4 border-b">{task.timeTracking}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
+  
+  
 };
 
 export default TaskManagementDashboard;
