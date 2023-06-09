@@ -7,16 +7,16 @@ interface Assignee {
 
 const TaskCreationPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredAssignees, setFilteredAssignees] = useState<Assignee[]>([]);
   const [assignees, setAssignees] = useState<Assignee[]>([]);
 
-  // For fetching the data from my api endpoint we use useEffect
   useEffect(() => {
     const hardcodedAssignees: Assignee[] = [
       { name: "John Doe" },
       { name: "Jane Smith" },
       { name: "Bob Johnson" },
     ];
-
+    setFilteredAssignees(hardcodedAssignees); // Initialize filteredAssignees with all assignees
     setAssignees(hardcodedAssignees);
     /*const fetchAssignees = async () => {
       
@@ -31,9 +31,17 @@ const TaskCreationPage: React.FC = () => {
     */
   }, []);
 
-  const filteredAssignees = assignees.filter((assignee) =>
-    assignee.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    // Filter assignees based on search query
+    const filtered = assignees.filter((assignee) =>
+      assignee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredAssignees(filtered);
+  }, [searchQuery, assignees]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -81,16 +89,16 @@ const TaskCreationPage: React.FC = () => {
               id="assigneeSearch"
               name="assigneeSearch"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
               className="input input-bordered w-full px-4 py-2"
-              placeholder="Search assignees"
+              placeholder="Search assignee"
+              onChange={handleSearchChange}
             />
             <select
               id="assignee"
               name="assignee"
               className="input input-bordered w-full px-4 py-2"
             >
-              {assignees.map((assignee, index) => (
+              {filteredAssignees.map((assignee, index) => (
                 <option key={index} value={assignee.name}>
                   {assignee.name}
                 </option>

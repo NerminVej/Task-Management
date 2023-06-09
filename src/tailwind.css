@@ -3,3 +3,38 @@
 @import 'tailwindcss/utilities';
 @import 'daisyui/dist/full.css';
 
+
+  
+
+
+.container {
+    @apply max-w-2xl mx-auto px-4 py-8;
+  }
+  
+  h1 {
+    @apply text-2xl font-bold text-primary mb-4;
+  }
+  
+  .task-table {
+    @apply w-full border-collapse;
+  }
+  
+  .task-table th,
+  .task-table td {
+    @apply px-4 py-2 text-left border-b border-gray-300;
+  }
+  
+  .task-table th {
+    @apply bg-primary text-white;
+  }
+  
+  .progress-bar {
+    @apply w-full h-4 bg-gray-200 rounded overflow-hidden;
+  }
+  
+  .progress-bar-fill {
+    @apply h-full bg-secondary;
+  }
+
+
+  
