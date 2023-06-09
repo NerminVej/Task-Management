@@ -52,7 +52,7 @@ const tasks: Task[] = [
 const TaskManagementDashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>(tasks);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [notifiedTasks, setNotifiedTasks] = useState<number[]>([]);
+  const [notificationTimeout, setNotificationTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const addNotification = (message: string, type: string) => {
     const newNotification: Notification = {
@@ -115,12 +115,11 @@ const TaskManagementDashboard: React.FC = () => {
         if (task.id === id) {
           let progress = task.progress;
           let notificationMessage = "";
-
+  
           if (task.status !== status) {
             if (status === "In Progress") {
               progress = 50;
               notificationMessage = "Task in progress.";
-              
             } else if (status === "Completed") {
               progress = 100;
               notificationMessage = "Task completed.";
@@ -128,26 +127,31 @@ const TaskManagementDashboard: React.FC = () => {
               progress = 0;
               notificationMessage = "Task pending.";
             }
-
+  
             // Show a notification if the status has changed
             if (notificationMessage !== "") {
               // Clear all existing notifications
               setNotifications([]);
-
+  
               // Add the new notification
+              const newNotification = {
+                id: Date.now(),
+                message: notificationMessage,
+                type: "success",
+                timestamp: new Date().toLocaleString(),
+              };
               setNotifications((prevNotifications) => [
                 ...prevNotifications,
-                {
-                  id: Date.now(),
-                  message: notificationMessage,
-                  type: "success",
-                  timestamp: new Date().toLocaleString(),
-                },
+                newNotification,
               ]);
-
+  
               // Set a timeout to remove the notification after 5 seconds
-              setTimeout(() => {
-                setNotifications([]);
+              const timeoutId = setTimeout(() => {
+                setNotifications((prevNotifications) =>
+                  prevNotifications.filter(
+                    (notification) => notification.id !== newNotification.id
+                  )
+                );
               }, 5000);
             }
             return { ...task, status, progress };
@@ -157,41 +161,8 @@ const TaskManagementDashboard: React.FC = () => {
       })
     );
   };
-
-  const handleTimeTrackingChange = (
-    id: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = event.target;
-    setTaskList((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, timeTracking: Number(value) };
-        }
-        return task;
-      })
-    );
-  };
-
-  const handleAttachmentUpload = (id: number, files: FileList | null) => {
-    if (files) {
-      const attachments: string[] = [];
-      for (let i = 0; i < files.length; i++) {
-        attachments.push(files[i].name);
-      }
-      setTaskList((prevTasks) =>
-        prevTasks.map((task) => {
-          if (task.id === id) {
-            return {
-              ...task,
-              attachments: [...task.attachments, ...attachments],
-            };
-          }
-          return task;
-        })
-      );
-    }
-  };
+  
+  
 
   return (
     <div className="container mx-auto px-4">
@@ -256,9 +227,7 @@ const TaskManagementDashboard: React.FC = () => {
                 </ul>
                 <input
                   type="file"
-                  onChange={(e) =>
-                    handleAttachmentUpload(task.id, e.target.files as FileList)
-                  }
+                  
                   multiple
                 />
               </td>
@@ -266,7 +235,7 @@ const TaskManagementDashboard: React.FC = () => {
                 <input
                   type="number"
                   value={task.timeTracking}
-                  onChange={(e) => handleTimeTrackingChange(task.id, e)}
+                  
                 />
               </td>
             </tr>
