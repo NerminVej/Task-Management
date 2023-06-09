@@ -6,12 +6,39 @@ interface Task {
   title: string;
   status: string;
   progress: number;
+  comments: string[];
+  attachments: string[];
+  timeTracking: number;
 }
 
 const tasks: Task[] = [
-  { id: 1, title: "Task 1", status: "In Progress", progress: 50 },
-  { id: 2, title: "Task 2", status: "Completed", progress: 100 },
-  { id: 3, title: "Task 3", status: "Pending", progress: 0 },
+  {
+    id: 1,
+    title: "Task 1",
+    status: "In Progress",
+    progress: 50,
+    comments: ["Comment 1", "Comment 2"],
+    attachments: ["Attachment 1", "Attachment 2"],
+    timeTracking: 120,
+  },
+  {
+    id: 2,
+    title: "Task 2",
+    status: "Completed",
+    progress: 100,
+    comments: ["Comment 3"],
+    attachments: ["Attachment 3"],
+    timeTracking: 180,
+  },
+  {
+    id: 3,
+    title: "Task 3",
+    status: "Pending",
+    progress: 0,
+    comments: [],
+    attachments: [],
+    timeTracking: 0,
+  },
 ];
 
 const TaskManagementDashboard: React.FC = () => {
@@ -39,6 +66,32 @@ const TaskManagementDashboard: React.FC = () => {
     );
   };
 
+  const handleTimeTrackingChange = (id: number, timeTracking: number) => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, timeTracking };
+        }
+
+        return task;
+      })
+    );
+  };
+
+  const handleAttachmentUpload = (id: number, files: FileList) => {
+    const attachments = Array.from(files).map((file) => file.name);
+
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, attachments };
+        }
+
+        return task;
+      })
+    );
+  };
+
   return (
     <div className="container mx-auto px-4">
       <h1 className="text-primary text-2xl font-bold my-4">
@@ -51,6 +104,9 @@ const TaskManagementDashboard: React.FC = () => {
             <th className="py-2">Title</th>
             <th className="py-2">Status</th>
             <th className="py-2">Progress</th>
+            <th className="py-2">Comments</th>
+            <th className="py-2">Attachments</th>
+            <th className="py-2">Time Tracking</th>
           </tr>
         </thead>
         <tbody>
@@ -61,9 +117,7 @@ const TaskManagementDashboard: React.FC = () => {
               <td className="py-2">
                 <select
                   value={task.status}
-                  onChange={
-                    (e) => handleStatusChange(task.id, e.target.value) // Pass task.progress
-                  }
+                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
                 >
                   <option value="Completed">Completed</option>
                   <option value="In Progress">In Progress</option>
@@ -77,6 +131,36 @@ const TaskManagementDashboard: React.FC = () => {
                     style={{ width: `${task.progress}%` }}
                   ></div>
                 </div>
+              </td>
+              <td className="py-2">
+                <ul>
+                  {task.comments.map((comment, index) => (
+                    <li key={index}>{comment}</li>
+                  ))}
+                </ul>
+              </td>
+              <td className="py-2">
+                <ul>
+                  {task.attachments.map((attachment, index) => (
+                    <li key={index}>{attachment}</li>
+                  ))}
+                </ul>
+                <input
+                  type="file"
+                  onChange={(e) =>
+                    handleAttachmentUpload(task.id, e.target.files as FileList)
+                  }
+                  multiple
+                />
+              </td>
+              <td className="py-2">
+                <input
+                  type="number"
+                  value={task.timeTracking}
+                  onChange={(e) =>
+                    handleTimeTrackingChange(task.id, parseInt(e.target.value))
+                  }
+                />
               </td>
             </tr>
           ))}
