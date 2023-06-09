@@ -6,27 +6,25 @@ interface NotificationProps {
   timestamp: string;
 }
 
-const Notification: React.FC<NotificationProps> = ({
+const CustomNotification: React.FC<NotificationProps> = ({
   message,
   type,
   timestamp,
 }) => {
   let notificationClass = "";
 
-  if (type === "info") {
-    notificationClass = "notification-info";
-  } else if (type === "success") {
-    notificationClass = "notification-success";
+  if (type === "success") {
+    notificationClass = "bg-green-500 text-white";
   } else if (type === "warning") {
-    notificationClass = "notification-warning";
+    notificationClass = "bg-yellow-500 text-black";
   }
 
   return (
-    <div className={`notification ${notificationClass}`}>
+    <div className={`notification p-4 ${notificationClass}`}>
       <p className="notification-message">{message}</p>
       <span className="notification-timestamp">{timestamp}</span>
     </div>
   );
 };
 
-export default Notification;
+export default CustomNotification;

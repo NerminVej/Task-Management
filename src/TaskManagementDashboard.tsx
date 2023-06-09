@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CustomNotification from "./CustomNotification";
 import "./tailwind.css";
 
 interface Task {
@@ -51,6 +52,7 @@ const tasks: Task[] = [
 const TaskManagementDashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>(tasks);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifiedTasks, setNotifiedTasks] = useState<number[]>([]);
 
   const addNotification = (message: string, type: string) => {
     const newNotification: Notification = {
@@ -111,19 +113,45 @@ const TaskManagementDashboard: React.FC = () => {
     setTaskList((prevTasks) =>
       prevTasks.map((task) => {
         if (task.id === id) {
-          let progress = 0;
+          let progress = task.progress;
+          let notificationMessage = "";
 
-          if (status === "In Progress") {
-            progress = 50;
-          } else if (status === "Completed") {
-            progress = 100;
-          } else if (status === "Pending") {
-            progress = 0;
+          if (task.status !== status) {
+            if (status === "In Progress") {
+              progress = 50;
+              notificationMessage = "Task in progress.";
+            } else if (status === "Completed") {
+              progress = 100;
+              notificationMessage = "Task completed.";
+            } else if (status === "Pending") {
+              progress = 0;
+              notificationMessage = "Task pending.";
+            }
+
+            // Show a notification if the status has changed
+            if (notificationMessage !== "") {
+              // Clear all existing notifications
+              setNotifications([]);
+
+              // Add the new notification
+              setNotifications((prevNotifications) => [
+                ...prevNotifications,
+                {
+                  id: Date.now(),
+                  message: notificationMessage,
+                  type: "info",
+                  timestamp: new Date().toLocaleString(),
+                },
+              ]);
+
+              // Set a timeout to remove the notification after 5 seconds
+              setTimeout(() => {
+                setNotifications([]);
+              }, 5000);
+            }
+            return { ...task, status, progress };
           }
-
-          return { ...task, status, progress };
         }
-
         return task;
       })
     );
@@ -166,6 +194,14 @@ const TaskManagementDashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4">
+      {notifications.map((notification) => (
+        <CustomNotification
+          key={notification.id}
+          message={notification.message}
+          type={notification.type}
+          timestamp={notification.timestamp}
+        />
+      ))}
       <h1 className="text-primary text-2xl font-bold my-4">
         Task Management Dashboard
       </h1>
