@@ -1,6 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const TaskCreationPage = () => {
+interface Assignee {
+  name: string;
+}
+
+const TaskCreationPage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [assignees, setAssignees] = useState<Assignee[]>([]);
+
+  // For fetching the data from my api endpoint we use useEffect
+  useEffect(() => {
+    const hardcodedAssignees: Assignee[] = [
+      { name: "John Doe" },
+      { name: "Jane Smith" },
+      { name: "Bob Johnson" },
+    ];
+
+    setAssignees(hardcodedAssignees);
+    /*const fetchAssignees = async () => {
+      
+      try {
+        const response = await axios.get("my-api-endpoint");
+        setAssignees(response.data);
+      } catch {
+        console.log("Eror fetching assignees", Error);
+      }
+    };
+    fetchAssignees();
+    */
+  }, []);
+
+  const filteredAssignees = assignees.filter((assignee) =>
+    assignee.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-md shadow-md">
@@ -42,19 +76,26 @@ const TaskCreationPage = () => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="assignee"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
-              Assignee
-            </label>
             <input
               type="text"
+              id="assigneeSearch"
+              name="assigneeSearch"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="input input-bordered w-full px-4 py-2"
+              placeholder="Search assignees"
+            />
+            <select
               id="assignee"
               name="assignee"
               className="input input-bordered w-full px-4 py-2"
-              placeholder="Enter assignee"
-            />
+            >
+              {assignees.map((assignee, index) => (
+                <option key={index} value={assignee.name}>
+                  {assignee.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-4">

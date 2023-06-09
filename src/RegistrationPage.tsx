@@ -40,6 +40,7 @@ const RegistrationPage: React.FC = () => {
     setPasswordStrength(passwordStrength);
     updatePasswordStrengthIndicator(passwordStrength);
   };
+
   const handleRepeatedPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRepeatedPassword(e.target.value);
   };
@@ -84,18 +85,18 @@ const RegistrationPage: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-500">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleFormSubmit}
         className="p-4 bg-white rounded-md shadow-md"
       >
         <div className="space-y-4">
-          <h1 className="text-accent text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Sign up for the Task Management Application
           </h1>
 
           <div>
-            <label htmlFor="name" className="block font-medium text-primary">
+            <label htmlFor="name" className="block text-primary mb-1">
               Name
             </label>
             <input
@@ -103,12 +104,12 @@ const RegistrationPage: React.FC = () => {
               type="text"
               value={name}
               onChange={handleNameChange}
-              className="input input-bordered bg-gray-100 focus:ring-secondary text-secondary border-secondary rounded-md px-4 py-2 "
+              className="input input-bordered w-full"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block font-medium text-primary">
+            <label htmlFor="email" className="block text-primary mb-1">
               Email
             </label>
             <input
@@ -116,15 +117,12 @@ const RegistrationPage: React.FC = () => {
               type="email"
               value={email}
               onChange={handleEmailChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered w-full"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block font-medium text-primary"
-            >
+            <label htmlFor="password" className="block text-primary mb-1">
               Password
             </label>
             <input
@@ -132,23 +130,20 @@ const RegistrationPage: React.FC = () => {
               type="password"
               value={password}
               onChange={handlePasswordChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered w-full"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block font-medium text-primary"
-            >
+            <label htmlFor="repeatedPassword" className="block text-primary mb-1">
               Confirm Password
             </label>
             <input
-              id="password"
+              id="repeatedPassword"
               type="password"
               value={repeatedPassword}
               onChange={handleRepeatedPasswordChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-4 py-2"
+              className="input input-bordered w-full"
             />
             <div className="top-2">
               <PasswordStrengthIndicator strength={passwordStrength} />
@@ -157,7 +152,7 @@ const RegistrationPage: React.FC = () => {
 
           <button
             type="submit"
-            className="btn bg-secondary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
+            className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
           >
             Sign Up
           </button>

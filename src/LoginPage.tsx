@@ -22,13 +22,13 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-500">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleFormSubmit}
         className="p-4 bg-white rounded-md shadow-md"
       >
         <div className="space-y-4">
-          <h1 className="text-accent text-center">
+          <h1 className="text-accent text-center text-gray-800">
             Login for the Task Management Application
           </h1>
 
