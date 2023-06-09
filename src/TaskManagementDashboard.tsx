@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./tailwind.css";
 
 interface Task {
@@ -15,28 +15,49 @@ const tasks: Task[] = [
 ];
 
 const TaskManagementDashboard: React.FC = () => {
+  const [taskList, setTaskList] = useState<Task[]>(tasks);
+
+  const handleStatusChange = (id: number, value: string) => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, status: value } : task
+      )
+    );
+  };
+
   return (
-    <div className="container">
-      <h1 className="text-primary">Task Management Dashboard</h1>
-      <table className="task-table">
+    <div className="container mx-auto px-4 ">
+      <h1 className="text-primary text-2xl font-bold my-4 ">
+        Task Management Dashboard
+      </h1>
+      <table className="task-table w-full ">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Progress</th>
+            <th className="py-2">ID</th>
+            <th className="py-2">Title</th>
+            <th className="py-2">Status</th>
+            <th className="py-2">Progress</th>
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => (
+          {taskList.map((task) => (
             <tr key={task.id}>
-              <td>{task.id}</td>
-              <td>{task.title}</td>
-              <td>{task.status}</td>
-              <td>
-                <div className="progress-bar">
+              <td className="py-2">{task.id}</td>
+              <td className="py-2">{task.title}</td>
+              <td className="py-2">
+                <select
+                  value={task.status}
+                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                >
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </td>
+              <td className="py-2">
+                <div className="progress-bar h-4 bg-gray-200 rounded">
                   <div
-                    className="progress-bar-fill"
+                    className="progress-bar-fill h-full bg-primary rounded"
                     style={{ width: `${task.progress}%` }}
                   ></div>
                 </div>
