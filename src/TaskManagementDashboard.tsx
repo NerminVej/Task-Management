@@ -11,6 +11,13 @@ interface Task {
   timeTracking: number;
 }
 
+interface Notification {
+  id: number;
+  message: string;
+  type: string;
+  timestamp: string;
+}
+
 const tasks: Task[] = [
   {
     id: 1,
@@ -43,6 +50,62 @@ const tasks: Task[] = [
 
 const TaskManagementDashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>(tasks);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const addNotification = (message: string, type: string) => {
+    const newNotification: Notification = {
+      id: Date.now(),
+      message,
+      type,
+      timestamp: new Date().toLocaleString(),
+    };
+
+    setNotifications((prevNotifications) => [
+      ...prevNotifications,
+      newNotification,
+    ]);
+  };
+
+  const assignTask = () => {
+    const assignedTask = {
+      id: Date.now(),
+      title: "New Task",
+      status: "Pending",
+      progress: 0,
+      comments: [],
+      attachments: [],
+      timeTracking: 0,
+    };
+
+    setTaskList((prevTasks) => [...prevTasks, assignedTask]);
+    addNotification("Task assigned to you.", "info");
+  };
+
+  const updateTask = () => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === 1) {
+          return {
+            ...task,
+            title: "Updated Task",
+            progress: 75,
+          };
+        }
+        return task;
+      })
+    );
+    addNotification("Task updated.", "success");
+  };
+
+  const checkDeadline = () => {
+    const approachingTasks = taskList.filter(
+      (task) => task.progress < 100 && task.progress > 0
+    );
+
+    if (approachingTasks.length > 0) {
+      addNotification("Task deadline approaching!", "warning");
+    }
+  };
 
   const handleStatusChange = (id: number, status: string) => {
     setTaskList((prevTasks) =>
@@ -166,9 +229,7 @@ const TaskManagementDashboard: React.FC = () => {
                 <input
                   type="number"
                   value={task.timeTracking}
-                  onChange={(e) =>
-                    handleTimeTrackingChange(task.id, e)
-                  }
+                  onChange={(e) => handleTimeTrackingChange(task.id, e)}
                 />
               </td>
             </tr>

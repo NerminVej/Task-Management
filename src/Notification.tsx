@@ -11,8 +11,18 @@ const Notification: React.FC<NotificationProps> = ({
   type,
   timestamp,
 }) => {
+  let notificationClass = "";
+
+  if (type === "info") {
+    notificationClass = "notification-info";
+  } else if (type === "success") {
+    notificationClass = "notification-success";
+  } else if (type === "warning") {
+    notificationClass = "notification-warning";
+  }
+
   return (
-    <div className={`notification ${type}`}>
+    <div className={`notification ${notificationClass}`}>
       <p className="notification-message">{message}</p>
       <span className="notification-timestamp">{timestamp}</span>
     </div>
