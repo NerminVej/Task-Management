@@ -120,6 +120,7 @@ const TaskManagementDashboard: React.FC = () => {
             if (status === "In Progress") {
               progress = 50;
               notificationMessage = "Task in progress.";
+              
             } else if (status === "Completed") {
               progress = 100;
               notificationMessage = "Task completed.";
@@ -139,7 +140,7 @@ const TaskManagementDashboard: React.FC = () => {
                 {
                   id: Date.now(),
                   message: notificationMessage,
-                  type: "info",
+                  type: "success",
                   timestamp: new Date().toLocaleString(),
                 },
               ]);
