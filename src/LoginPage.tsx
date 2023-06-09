@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block font-medium text-primary text-left"
+              className="block text-sm font-medium text-primary text-left"
             >
               Email
             </label>
@@ -45,14 +45,14 @@ const LoginPage: React.FC = () => {
               name="email"
               value={loginForm.email}
               onChange={handleInputChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md px-20 py-2"
+              className="input input-bordered w-full px-4 py-2"
             />
           </div>
 
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block font-medium text-primary text-left"
+              className="block text-sm font-medium text-primary text-left"
             >
               Password
             </label>
@@ -62,13 +62,14 @@ const LoginPage: React.FC = () => {
               name="password"
               value={loginForm.password}
               onChange={handleInputChange}
-              className="input input-bordered bg-gray-100 focus:ring-indigo-500 text-secondary border-secondary rounded-md py-2 px-20"
+              className="input input-bordered w-full px-4 py-2"
             />
           </div>
-          <div className="flex justify-center items-center">
+
+          <div className="flex justify-center">
             <button
               type="submit"
-              className="btn bg-primary text-white font-medium px-20 py-2 rounded-md shadow-md hover:bg-opacity-90 "
+              className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
             >
               Login
             </button>
