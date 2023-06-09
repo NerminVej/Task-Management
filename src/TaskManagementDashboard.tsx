@@ -17,20 +17,34 @@ const tasks: Task[] = [
 const TaskManagementDashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>(tasks);
 
-  const handleStatusChange = (id: number, value: string) => {
+  const handleStatusChange = (id: number, status: string) => {
     setTaskList((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, status: value } : task
-      )
+      prevTasks.map((task) => {
+        if (task.id === id) {
+          let progress = 0;
+
+          if (status === "In Progress") {
+            progress = 50;
+          } else if (status === "Completed") {
+            progress = 100;
+          } else if (status === "Pending") {
+            progress = 0;
+          }
+
+          return { ...task, status, progress };
+        }
+
+        return task;
+      })
     );
   };
 
   return (
-    <div className="container mx-auto px-4 ">
-      <h1 className="text-primary text-2xl font-bold my-4 ">
+    <div className="container mx-auto px-4">
+      <h1 className="text-primary text-2xl font-bold my-4">
         Task Management Dashboard
       </h1>
-      <table className="task-table w-full ">
+      <table className="task-table w-full">
         <thead>
           <tr>
             <th className="py-2">ID</th>
@@ -47,10 +61,12 @@ const TaskManagementDashboard: React.FC = () => {
               <td className="py-2">
                 <select
                   value={task.status}
-                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                  onChange={
+                    (e) => handleStatusChange(task.id, e.target.value) // Pass task.progress
+                  }
                 >
-                  <option value="In Progress">In Progress</option>
                   <option value="Completed">Completed</option>
+                  <option value="In Progress">In Progress</option>
                   <option value="Pending">Pending</option>
                 </select>
               </td>
