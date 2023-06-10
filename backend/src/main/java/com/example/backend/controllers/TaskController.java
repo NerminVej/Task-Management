@@ -1,7 +1,7 @@
 package com.example.backend.controllers;
-import com.mygroup.TaskManagement.models.Task;
 
-import com.mygroup.TaskManagement.services.TaskService;
+import com.example.backend.models.Task;
+import com.example.backend.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

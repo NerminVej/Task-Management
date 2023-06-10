@@ -1,7 +1,8 @@
-package com.mygroup.TaskManagement.services;
+package com.example.backend.services;
 
-import com.mygroup.TaskManagement.models.User;
-import com.mygroup.TaskManagement.repositories.UserRepository;
+import com.example.backend.models.User;
+import com.example.backend.repositories.UserRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public void deleteUser(Long id) {
+        userRepository.delete(id);
     }
 
     public Optional<User> authenticateUser(String username, String password) {
