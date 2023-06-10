@@ -28,11 +28,11 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Task task) {
+    public Task updateTask(Long id, Task task) {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Task task) {
+    public void deleteTask(Long task) {
         taskRepository.delete(task);
     }
 
