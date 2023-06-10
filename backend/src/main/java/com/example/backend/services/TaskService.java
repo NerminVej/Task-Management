@@ -33,8 +33,8 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long task) {
-        taskRepository.delete(task);
+    public void deleteTask(Long id) {
+        taskRepository.delete(id);
     }
 
 

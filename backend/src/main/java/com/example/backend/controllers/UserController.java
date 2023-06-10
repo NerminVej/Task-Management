@@ -1,7 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.backend.models.User;
-import com.mygroup.TaskManagement.services.UserService;
+import com.example.backend.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +52,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // Other controller methods as needed
+
 
 }
