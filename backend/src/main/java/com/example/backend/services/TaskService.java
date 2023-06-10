@@ -1,7 +1,8 @@
-package com.mygroup.TaskManagement.services;
+package com.example.backend.services;
 
-import com.mygroup.TaskManagement.models.Task;
-import com.mygroup.TaskManagement.repositories.TaskRepository;
+
+import com.example.backend.models.Task;
+import com.example.backend.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long task) {
+    public void deleteTask(Task task) {
         taskRepository.delete(task);
     }
 

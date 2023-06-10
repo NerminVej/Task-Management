@@ -1,11 +1,8 @@
-package com.mygroup.TaskManagement.models;
+package com.example.backend.models;
 
-import com.example.backend.models.Entiy;
 import jakarta.persistence.*;
 
-import javax.persistence.*;
-
-@Entiy
+@Entity
 @Table(name = "users")
 public class User {
 

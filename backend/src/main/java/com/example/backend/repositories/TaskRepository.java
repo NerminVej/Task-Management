@@ -1,15 +1,14 @@
-package com.mygroup.TaskManagement.repositories;
+package com.example.backend.repositories;
 
-import com.mygroup.TaskManagement.models.Task;
+import com.example.backend.models.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByUserId(Long userId);
 
 
-
+    void delete(Task task);
 }
