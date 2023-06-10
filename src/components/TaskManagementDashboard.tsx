@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CustomNotification from "./CustomNotification";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import "./styles/tailwind.css";
+import "../styles/tailwind.css";
 
 interface Task {
   id: number;

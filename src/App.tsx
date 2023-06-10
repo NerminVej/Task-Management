@@ -1,8 +1,8 @@
 import React from "react";
-import RegistrationPage from "./RegistrationPage";
-import LoginPage from "./LoginPage";
-import TaskCreationPage from "./TaskCreationPage";
-import TaskManagementDashboard from "./TaskManagementDashboard";
+import RegistrationPage from "./components/RegistrationPage";
+import LoginPage from "./components/LoginPage";
+import TaskCreationPage from "./components/TaskCreationPage";
+import TaskManagementDashboard from "./components/TaskManagementDashboard";
 
 
 function App() {
