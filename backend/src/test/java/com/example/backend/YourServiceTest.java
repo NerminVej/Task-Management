@@ -36,11 +36,10 @@ public class YourServiceTest {
 
     @Before
     public void setUp() {
-        // Set up any necessary initialization or configuration
     }
 
     @Test
-    void testGetAllUsers() {
+    public void testGetAllUsers() {
         // Mock the repository response
         List<User> users = new ArrayList<>();
         users.add(new User(1L, "John"));
@@ -55,7 +54,7 @@ public class YourServiceTest {
     }
 
     @Test
-    void testGetUserById() {
+    public void testGetUserById() {
         // Mock the repository response
         User user = new User(1L, "John");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -68,7 +67,7 @@ public class YourServiceTest {
     }
 
     @Test
-    void testRegisterUser() {
+    public void testRegisterUser() {
         // Create a new user
         User user = new User(1L, "John");
 
@@ -84,7 +83,7 @@ public class YourServiceTest {
 
 
     @Test
-    void testDeleteUser() {
+    public void testDeleteUser() {
         // Create a user with ID 1
         User user = new User();
         user.setId(1L);
@@ -107,7 +106,7 @@ public class YourServiceTest {
 
 
     @Test
-    void testAuthenticateUser() {
+    public void testAuthenticateUser() {
         // Mock the repository response
         User user = new User(1L, "John");
         when(userRepository.findByUsernameAndPassword("john", "password")).thenReturn(Optional.of(user));
