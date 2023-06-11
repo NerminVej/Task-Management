@@ -21,6 +21,9 @@ public class User {
     public User() {
     }
 
+    public User(long l, String username) {
+    }
+
     // Getters and setters for the fields
 
     public Long getId() {
