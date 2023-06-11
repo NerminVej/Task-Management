@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
 @Configuration
 public class SecurityConfig extends WebSecurityConfiguration {
 
@@ -23,27 +24,22 @@ public class SecurityConfig extends WebSecurityConfiguration {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeExchange()
-                .pathMatchers("/public/**").permitAll() // Allow public access to certain URLs
-                .pathMatchers("/admin/**").hasRole("ADMIN") // Restrict access to "/admin/**" URLs to users with the "ADMIN" role
-                .anyExchange().authenticated() // Require authentication for any other request
+                .authorizeRequests()
+                .antMatchers("/public/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                // Specifies the custom login page URL
                 .loginPage("/login")
-                // Allows access to the login page
                 .permitAll()
                 .and()
                 .logout()
-                // Specifies the logout URL
                 .logoutUrl("/logout")
-                // Specifies the redirect URL after successful logout
                 .logoutSuccessUrl("/login?logout")
-                // Invalidates the session upon logout
                 .invalidateHttpSession(true)
-                // Deletes the JSESSIONID cookie upon logout
                 .deleteCookies("JSESSIONID");
     }
+
 
 
 
