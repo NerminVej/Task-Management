@@ -95,7 +95,7 @@ public class YourServiceTest {
         userService.deleteUser(1L);
 
         // Verify that the repository's delete method is called with ID 1
-        verify(userRepository, times(1)).deleteById(1L);
+        verify(userRepository, times(1)).delete(1L);
 
         // Verify that the repository's findById method is not called
         verify(userRepository, never()).findById(anyLong());
