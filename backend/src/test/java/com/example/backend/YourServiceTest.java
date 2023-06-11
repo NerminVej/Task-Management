@@ -4,12 +4,16 @@ import com.example.backend.models.User;
 import com.example.backend.repositories.UserRepository;
 import com.example.backend.services.TaskService;
 import com.example.backend.services.UserService;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,29 +44,29 @@ public class YourServiceTest {
 
     @Test
     public void testGetAllUsers() {
-        // Mock the repository response
+        // Mocks the repository response
         List<User> users = new ArrayList<>();
         users.add(new User(1L, "John"));
         users.add(new User(2L, "Jane"));
         when(userRepository.findAll()).thenReturn(users);
 
-        // Call the service method
+        // Calls the service method
         List<User> result = userService.getAllUsers();
 
-        // Check the result
+        // Checks the result
         assertEquals(users, result);
     }
 
     @Test
     public void testGetUserById() {
-        // Mock the repository response
+        // Mocks the repository response
         User user = new User(1L, "John");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        // Call the service method
+        // Calls the service method
         Optional<User> result = userService.getUserById(1L);
 
-        // Check the result
+        // Checks the result
         assertEquals(Optional.of(user), result);
     }
 
@@ -117,6 +121,55 @@ public class YourServiceTest {
         // Check the result
         assertEquals(Optional.of(user), result);
     }
+/*
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    public void testAdminEndpointAccess() {
+        // Mock the repository response
+        User adminUser = new User(1L, "admin");
+        when(userRepository.findByUsername("admin")).thenReturn(adminUser);
+
+        // Retrieve the current authenticated user
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+
+        // Call a protected endpoint that requires ADMIN role
+        // Call a protected method that requires ADMIN role
+        String adminMethodResult = userService.adminMethod();
+
+        // Assert that the current authenticated user has access to the admin method
+        assertEquals("Hello admin!", adminMethodResult);
+        assertEquals("admin", authenticatedUsername);
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = "USER")
+    public void testUserEndpointAccess() {
+        // Mock the repository response
+        User regularUser = new User(2L, "user");
+        when(userRepository.findByUsername("user")).thenReturn(Optional.of(regularUser));
+
+        // Retrieve the current authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+
+        // Call a protected endpoint that requires USER role
+        String userEndpointResult = userService.userEndpoint();
+
+        // Assert that the current authenticated user has access to the user endpoint
+        assertEquals("Hello user!", userEndpointResult);
+        assertEquals("user", authenticatedUsername);
+    }
+
+    @Test
+    public void testUnauthenticatedEndpointAccess() {
+        // Call a public endpoint without authentication
+        String publicEndpointResult = userService.publicEndpoint();
+
+        // Assert that the public endpoint is accessible without authentication
+        assertEquals("Public endpoint", publicEndpointResult);
+    }
+*/
 }
 
 
