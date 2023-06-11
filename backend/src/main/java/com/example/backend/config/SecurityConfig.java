@@ -15,14 +15,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    private UserDetailsService userDetailsService;
+
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -34,7 +34,6 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/").permitAll();
                     authConfig.requestMatchers("/user/**").authenticated();
                     authConfig.requestMatchers("/admin/**").denyAll();
-
                 })
                 .formLogin(Customizer.withDefaults()) // Login with browser and Form
                 .httpBasic(Customizer.withDefaults()); // Login with Insomnia and Basic Auth
@@ -48,8 +47,8 @@ public class SecurityConfig {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        if (userDetailsService != null) {
+            auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        }
     }
 }
-
-

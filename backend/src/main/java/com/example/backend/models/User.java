@@ -13,6 +13,11 @@ public class User {
     @Column(nullable = false)
     private String username;
 
+
+
+    @Column(nullable = false)
+    private String email;
+
     @Column(nullable = false)
     private String password;
 
@@ -50,7 +55,13 @@ public class User {
         this.password = password;
     }
 
-    // Additional getters and setters for the remaining fields
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public String toString() {
