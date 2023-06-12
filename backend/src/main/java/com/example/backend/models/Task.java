@@ -23,6 +23,17 @@ public class Task {
 
     // Additional fields and relationships
 
+    public Task(Long id, String name, String status, LocalDateTime time) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.time = time;
+    }
+
+    public Task(Long id) {
+        this.id = id;
+    }
+
     public Task() {
     }
 
