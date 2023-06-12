@@ -21,7 +21,18 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    // Additional fields and relationships
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+
+    public Task(User user) {
+        this.user = user;
+    }
+
+
 
     public Task(Long id, String name, String status, LocalDateTime time) {
         this.id = id;
