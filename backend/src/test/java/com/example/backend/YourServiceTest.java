@@ -96,10 +96,10 @@ public class YourServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Call the service method
-        userService.deleteUser(1L);
+        userService.deleteUserById(1L);
 
         // Verify that the repository's delete method is called with ID 1
-        verify(userRepository, times(1)).delete(1L);
+        verify(userRepository, times(1)).deleteById(1L);
 
         // Verify that the repository's findById method is not called
         verify(userRepository, never()).findById(anyLong());

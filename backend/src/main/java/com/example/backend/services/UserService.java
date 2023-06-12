@@ -29,9 +29,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        userRepository.delete(id);
+    public void deleteUserById(Long userId) {
+        userRepository.deleteById(userId);
     }
+
 
     public Optional<User> authenticateUser(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
