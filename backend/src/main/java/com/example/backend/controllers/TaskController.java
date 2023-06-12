@@ -3,6 +3,7 @@ package com.example.backend.controllers;
 import com.example.backend.models.Task;
 import com.example.backend.services.TaskService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,11 +43,24 @@ public class TaskController {
 
 
 
+
     @PostMapping
     public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
+
         Task createdTask = taskService.createTask(task);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+        /*
+        try {
+            Task createdTask = taskService.createTask(task);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+        } catch (Exception e) {
+            // Handle exception and return appropriate error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        */
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {
