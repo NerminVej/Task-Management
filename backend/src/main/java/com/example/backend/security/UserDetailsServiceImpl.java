@@ -1,3 +1,4 @@
+/*
 package com.example.backend.security;
 
 import com.example.backend.models.User;
@@ -9,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+*/ /*
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository; // Inject my user repository
@@ -39,3 +40,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
 }
+*/

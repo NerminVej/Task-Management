@@ -1,3 +1,4 @@
+/*
 package com.example.backend.services;
 
 import com.example.backend.models.User;
@@ -12,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+*/
 
+/*
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -39,3 +42,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 }
+*/

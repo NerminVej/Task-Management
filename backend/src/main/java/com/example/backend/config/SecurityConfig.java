@@ -1,4 +1,4 @@
-package com.example.backend.config;
+/* package com.example.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+*/
 
+/*
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig {
 
 
@@ -26,14 +29,16 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
+
+
     // Configures the security filter chain to define authorization rules.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/").permitAll();
-                    authConfig.requestMatchers("/user/**").authenticated();
-                    authConfig.requestMatchers("/admin/**").denyAll();
+                    //authConfig.requestMatchers("/user/**").authenticated();
+                    //authConfig.requestMatchers("/admin/**").denyAll();
                 })
                 .formLogin(Customizer.withDefaults()) // Login with browser and Form
                 .httpBasic(Customizer.withDefaults()); // Login with Insomnia and Basic Auth
@@ -52,3 +57,4 @@ public class SecurityConfig {
         }
     }
 }
+*/
