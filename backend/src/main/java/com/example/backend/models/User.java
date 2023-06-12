@@ -2,6 +2,8 @@ package com.example.backend.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -21,7 +23,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // Additional fields and relationships
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Task> tasks;
+
 
     public User() {
     }
@@ -29,7 +33,17 @@ public class User {
     public User(long l, String username) {
     }
 
-    // Getters and setters for the fields
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+
+
+
 
     public Long getId() {
         return id;
@@ -69,7 +83,6 @@ public class User {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                // Additional fields
                 '}';
     }
 }

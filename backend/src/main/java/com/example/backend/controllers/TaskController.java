@@ -1,9 +1,11 @@
 package com.example.backend.controllers;
 
 import com.example.backend.models.Task;
+import com.example.backend.models.User;
 import com.example.backend.services.TaskService;
+import com.example.backend.services.UserService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,14 @@ import java.util.Optional;
 @RequestMapping("/api/tasks")
 public class TaskController {
 
+
     private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
+    private final UserService userService;
+
+    public TaskController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -44,7 +50,20 @@ public class TaskController {
 
 
 
-    @PostMapping
+    @PostMapping("/")
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task, @RequestParam("user_id") Long userId) {
+        //User user = userService.getUserById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        //task.setUser(user);
+        Task createdTask = taskService.createTask(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+
+
+    }
+
+
+
+
+    /*@PostMapping
     public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
 
         Task createdTask = taskService.createTask(task);
@@ -58,8 +77,8 @@ public class TaskController {
             // Handle exception and return appropriate error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        */
-    }
+
+    }*/
 
 
     @PutMapping("/{id}")

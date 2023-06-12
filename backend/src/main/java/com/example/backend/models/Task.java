@@ -1,8 +1,10 @@
 package com.example.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "tasks")
@@ -22,15 +24,24 @@ public class Task {
     private LocalDateTime time;
 
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
+
 
 
     public Task(User user) {
         this.user = user;
     }
+
+    public Task() {
+    }
+
+
 
 
 
@@ -41,14 +52,26 @@ public class Task {
         this.time = time;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public Task(Long id) {
         this.id = id;
     }
 
-    public Task() {
+
+    public User getUser() {
+        return user;
     }
 
-    // Getters and setters for the fields
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
@@ -82,7 +105,6 @@ public class Task {
         this.time = time;
     }
 
-    // Additional getters and setters for the remaining fields
 
     @Override
     public String toString() {

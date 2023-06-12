@@ -16,7 +16,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    @Autowired
+    //@Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -40,7 +40,7 @@ public class UserController {
 
 
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
         User createdUser = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
