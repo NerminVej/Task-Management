@@ -10,8 +10,10 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findByUserId(Long id);
+    //List<Task> findByUserId(Long id);
 
+    @Query("SELECT t FROM Task t WHERE t.id = :id")
+    List<Task> findByUserId(@Param("id") Long id);
 
     //void delete(Long id);
 
