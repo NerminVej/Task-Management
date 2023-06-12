@@ -33,10 +33,18 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long id) {
+    /*public void deleteTask(Long id) {
         taskRepository.delete(id);
+    }*/
+
+    public void deleteTaskById(Long taskId) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+            taskRepository.delete(task);
+        } else {
+            throw new IllegalArgumentException("Task not found with ID: " + taskId);
+        }
     }
-
-
 
 }
