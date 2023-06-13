@@ -13,3 +13,11 @@ export const signup = (name: string, email: string, password: string) => {
   const url = `${API_BASE_URL}/users/`;
   return axios.post(url, { username: name, email, password });
 };
+
+// Handles the login.
+export const login = (email: string, password: string) => {
+  const url = `${API_BASE_URL}/users/`;
+  return axios.post(url, { email, password });
+};
+
+

@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
-import { signup } from '../config/api'; 
+import { signup } from "../config/api";
 
 const RegistrationPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -9,38 +9,30 @@ const RegistrationPage: React.FC = () => {
   const [repeatedPassword, setRepeatedPassword] = useState<string>("");
   const [passwordStrength, setPasswordStrength] = useState<string>("");
 
-
   // Function that handles the signup
   const handleSignup = () => {
     // Check if the email is a valid email.
-    if (isEmailValid(email) && (checkPasswordStrength(password) === "good" || checkPasswordStrength(password) === "strong")) {
+    if (
+      isEmailValid(email) &&
+      (checkPasswordStrength(password) === "good" ||
+        checkPasswordStrength(password) === "strong")
+    ) {
       signup(name, email, password)
-        .then(response => {
+        .then((response) => {
           console.log("Signup successful");
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Signup failed:", error);
         });
     } else {
       console.log("Invalid Credentials");
     }
   };
-  
-
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const passwordStrength = checkPasswordStrength(password);
-    if (passwordStrength === "weak") {
-      console.log("Weak password! Please choose a stronger password.");
-    } else {
-      // If it is a valid email then it should submit the form
-      if (isEmailValid(email)) {
-        console.log("Form submitted successfully");
-      } else {
-        console.log("Invalid Email address entered. Please enter a real one.");
-      }
-    }
+    // Call the handleSignup function so that if the signup button gets hit that the function gets triggered.
+    handleSignup();
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -155,7 +147,10 @@ const RegistrationPage: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="repeatedPassword" className="block text-primary mb-1">
+            <label
+              htmlFor="repeatedPassword"
+              className="block text-primary mb-1"
+            >
               Confirm Password
             </label>
             <input
@@ -173,7 +168,7 @@ const RegistrationPage: React.FC = () => {
           <button
             type="submit"
             className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
-            onSubmit={handleSignup}
+            //onSubmit={handleSignup}
           >
             Sign Up
           </button>
