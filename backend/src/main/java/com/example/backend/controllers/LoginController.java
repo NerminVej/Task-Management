@@ -23,7 +23,12 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/")
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+    @PostMapping
     public ResponseEntity<String> login(@RequestParam("email") String email,
                                         @RequestParam("password") String password) {
         try {
@@ -48,8 +53,5 @@ public class LoginController {
         }
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-    }
+
 }
