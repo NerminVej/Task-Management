@@ -48,6 +48,8 @@ public class TaskController {
     }
 
 
+    // http://localhost:8080/api/tasks/user/1 as an example. Gets me all the tasks for the user with the id 1.
+    // The endpoint that lets us get all the tasks of one specific user.
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Long userId) {
         List<Task> tasks = taskService.getTasksByUserId(userId);
@@ -58,8 +60,6 @@ public class TaskController {
 
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@Valid @RequestBody Task task, @RequestParam("user_id") Long userId) {
-        //User user = userService.getUserById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        //task.setUser(user);
         Task createdTask = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
 

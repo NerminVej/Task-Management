@@ -48,6 +48,7 @@ public class UserController {
         }
     }
 
+    // Example: http://localhost:8080/api/users/2/tasks this one creates a task for the user with the id 2.
     // Get all tasks for a specific user
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<List<Task>> getUserTasks(@PathVariable Long userId) {
