@@ -11,5 +11,5 @@ export const getTasksByUserId = (userId: number) => {
 // Handles our signup.
 export const signup = (name: string, email: string, password: string) => {
   const url = `${API_BASE_URL}/users/`;
-  return axios.post(url, { name, email, password });
+  return axios.post(url, { username: name, email, password });
 };

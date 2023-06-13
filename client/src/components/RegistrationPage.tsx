@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
+import { signup } from '../config/api'; 
 
 const RegistrationPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -7,6 +8,25 @@ const RegistrationPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [repeatedPassword, setRepeatedPassword] = useState<string>("");
   const [passwordStrength, setPasswordStrength] = useState<string>("");
+
+
+  // Function that handles the signup
+  const handleSignup = () => {
+    // Check if the email is a valid email.
+    if (isEmailValid(email) && (checkPasswordStrength(password) === "good" || checkPasswordStrength(password) === "strong")) {
+      signup(name, email, password)
+        .then(response => {
+          console.log("Signup successful");
+        })
+        .catch(error => {
+          console.error("Signup failed:", error);
+        });
+    } else {
+      console.log("Invalid Credentials");
+    }
+  };
+  
+
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -153,6 +173,7 @@ const RegistrationPage: React.FC = () => {
           <button
             type="submit"
             className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
+            onSubmit={handleSignup}
           >
             Sign Up
           </button>
