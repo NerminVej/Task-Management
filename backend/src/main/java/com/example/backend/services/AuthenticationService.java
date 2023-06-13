@@ -2,7 +2,20 @@ package com.example.backend.services;
 
 import com.example.backend.models.User;
 import com.example.backend.repositories.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -10,25 +23,54 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
-    // Example method to authenticate user credentials
+    private final String SECRET_KEY;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public AuthenticationService() {
+        // Generates a secure random secret key
+        byte[] keyBytes = new byte[64];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(keyBytes);
+        SECRET_KEY = Base64.getEncoder().encodeToString(keyBytes);
+    }
+
+    // Methods to authenticate user credentials
     public boolean authenticate(String email, String password) {
         // Retrieve the user from the database based on the email
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user != null) {
+        if (user.isPresent()) {
             // Compare the provided password with the stored password (hashed)
-            return BCrypt.checkpw(password, user.getPassword());
+            return passwordEncoder.matches(password, user.get().getPassword());
         }
 
         return false;
     }
 
-    // Example method to generate an authentication token
-    public String generateAuthToken(String email) {
-        // Generate a JWT token with the user's email as the subject
+    // Methods to generate an authentication token
+    private Date getExpirationDate() {
+        // Sets the expiration duration in milliseconds (e.g., 1 day)
+        long expirationDuration = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+
+        // Calculates the expiration date by adding the duration to the current date
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MILLISECOND, (int) expirationDuration);
+
+        return calendar.getTime();
+    }
+
+    public String generateToken(UserDetails userDetails) {
+        // Generates a Key instance from the secret key
+        Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+
+        // Builds the JWT token
         String token = Jwts.builder()
-                .setSubject(email)
-                .signWith(SignatureAlgorithm.HS256, "yourSecretKey")
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(getExpirationDate())
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         return token;
