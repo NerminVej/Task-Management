@@ -70,23 +70,21 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+
     // Create a new task for a specific user
     @PostMapping("/{userId}/tasks")
     public ResponseEntity<Task> createTask(@PathVariable Long userId, @RequestBody Task task) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            task.setUser(user); // Associate the task with the user
+            task.setUserId(userId); // Set the userId directly in the task
 
             Task savedTask = taskRepository.save(task);
-            user.getTasks().add(savedTask); // Add the task to the user's task list
-            userRepository.save(user);
-
             return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 
 
     @DeleteMapping("/{id}")

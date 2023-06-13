@@ -27,7 +27,7 @@ public class Task {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-
+/*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
@@ -37,7 +37,7 @@ public class Task {
     public Task(User user) {
         this.user = user;
     }
-
+*/
     public Task() {
     }
 
@@ -64,7 +64,7 @@ public class Task {
         this.id = id;
     }
 
-
+/*
     public User getUser() {
         return user;
     }
@@ -72,7 +72,7 @@ public class Task {
     public void setUser(User user) {
         this.user = user;
     }
-
+*/
     public Long getId() {
         return id;
     }

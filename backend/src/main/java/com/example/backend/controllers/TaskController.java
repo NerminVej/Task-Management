@@ -30,6 +30,7 @@ public class TaskController {
         this.userService = userService;
     }
 
+    // With this we are able to get all the tasks
     @GetMapping("/")
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
@@ -63,22 +64,7 @@ public class TaskController {
 
 
 
-    /*@PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
 
-        Task createdTask = taskService.createTask(task);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-        /*
-        try {
-            Task createdTask = taskService.createTask(task);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-        } catch (Exception e) {
-            // Handle exception and return appropriate error response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-    }*/
 
 
     @PutMapping("/{id}")
