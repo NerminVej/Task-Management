@@ -47,4 +47,8 @@ public class TaskService {
         }
     }
 
+    public List<Task> getTasksByUserId(Long userId) {
+        return taskRepository.findByUser_Id(userId);
+    }
+
 }

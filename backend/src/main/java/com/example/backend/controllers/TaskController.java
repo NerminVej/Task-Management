@@ -48,6 +48,11 @@ public class TaskController {
     }
 
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Long userId) {
+        List<Task> tasks = taskService.getTasksByUserId(userId);
+        return ResponseEntity.ok(tasks);
+    }
 
 
 
