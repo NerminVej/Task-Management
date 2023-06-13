@@ -1,4 +1,4 @@
-/* package com.example.backend.config;
+package com.example.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +14,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
-*/
 
 /*
+
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
+
+    @Override
+    protected void configure(HttpSecurity security) throws Exception
+    {
+        security.httpBasic().disable();
+    }
+}
 
 
     private UserDetailsService userDetailsService;
