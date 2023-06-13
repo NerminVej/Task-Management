@@ -35,18 +35,9 @@ public class AuthenticationService {
         SECRET_KEY = Base64.getEncoder().encodeToString(keyBytes);
     }
 
-    // Methods to authenticate user credentials
-    public boolean authenticate(String email, String password) {
-        // Retrieve the user from the database based on the email
-        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user.isPresent()) {
-            // Compare the provided password with the stored password (hashed)
-            return passwordEncoder.matches(password, user.get().getPassword());
-        }
 
-        return false;
-    }
+
 
     // Methods to generate an authentication token
     private Date getExpirationDate() {
@@ -74,5 +65,31 @@ public class AuthenticationService {
                 .compact();
 
         return token;
+    }
+
+
+    // Methods to authenticate user credentials
+    public boolean authenticate(String email, String password) {
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
+
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+
+        // Retrieve the user from the database based on the email
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            // Compare the provided password with the stored password (hashed)
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return true; // Authentication successful
+            }
+        }
+
+        return false; // Authentication failed
     }
 }
