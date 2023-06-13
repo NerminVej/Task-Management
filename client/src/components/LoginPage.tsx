@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
         className="p-4 bg-white rounded-md shadow-md"
       >
         <div className="space-y-4">
-          <h1 className="text-accent text-center text-gray-800">
+          <h1 className="text-center text-gray-800">
             Login for the Task Management Application
           </h1>
 

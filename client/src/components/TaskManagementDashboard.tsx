@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CustomNotification from "./CustomNotification";
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import "../styles/tailwind.css";
@@ -55,6 +56,20 @@ const TaskManagementDashboard: React.FC = () => {
   const [taskList, setTaskList] = useState<Task[]>(tasks);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationTimeout, setNotificationTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [userId, setUserId] = useState<number>(1);
+
+
+// Inside your React component
+axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
+  .then(response => {
+    // Handle the response data
+    console.log(response.data);
+  })
+  .catch(error => {
+    // Handle errors
+    console.error(error);
+  });
+
 
   const addNotification = (message: string, type: string) => {
     const newNotification: Notification = {
