@@ -4,8 +4,10 @@ import com.example.backend.models.Task;
 import com.example.backend.models.User;
 import com.example.backend.repositories.TaskRepository;
 import com.example.backend.repositories.UserRepository;
+import com.example.backend.services.AuthenticationService;
 import com.example.backend.services.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,8 @@ public class UserController {
     private final UserService userService;
 
 
+    @Autowired
+    private AuthenticationService authenticationService;
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
@@ -30,6 +34,30 @@ public class UserController {
         this.taskRepository = taskRepository;
     }
 
+
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam("email") String email,
+                                        @RequestParam("password") String password) {
+        try {
+            boolean isAuthenticated = authenticationService.authenticate(email, password);
+
+            if (isAuthenticated) {
+                // Authentication successful
+                // Generate token or perform any other actions
+                return ResponseEntity.ok("Authentication successful");
+            } else {
+                // Authentication failed
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            }
+        } catch (IllegalArgumentException e) {
+            // Invalid input, such as null or empty email/password
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // Other exceptions occurred during authentication
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
 
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {

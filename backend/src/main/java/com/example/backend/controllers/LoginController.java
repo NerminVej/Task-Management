@@ -36,7 +36,7 @@ public class LoginController {
 
             if (isAuthenticated) {
                 // Authentication successful
-                User user = getUserByEmail(email); // Replace with your own logic to get the user from the database
+                User user = getUserByEmail(email);
                 UserDetails userDetails = new CustomUserDetails(user);
                 String token = authenticationService.generateToken(userDetails);
                 return ResponseEntity.ok(token);

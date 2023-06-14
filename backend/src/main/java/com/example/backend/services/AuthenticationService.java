@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,11 @@ import java.util.Optional;
 @Service
 public class AuthenticationService {
 
+
     @Autowired
     private UserRepository userRepository;
 
     private final String SECRET_KEY;
-
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public AuthenticationService() {
         // Generates a secure random secret key
@@ -34,6 +34,9 @@ public class AuthenticationService {
         secureRandom.nextBytes(keyBytes);
         SECRET_KEY = Base64.getEncoder().encodeToString(keyBytes);
     }
+    // Other methods in the class
+
+
 
 
 
@@ -84,14 +87,22 @@ public class AuthenticationService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // Compare the provided password with the stored password (hashed)
-            if (passwordEncoder.matches(password, user.getPassword())) {
+            // Log the provided and stored passwords for debugging
+            System.out.println("Provided password: " + password);
+            System.out.println("Stored password: " + user.getPassword());
+
+            // Compare the provided password with the stored password (plaintext)
+            if (password.equals(user.getPassword())) {
+                System.out.println("Authentication successful");
                 return true; // Authentication successful
             }
         }
 
+        System.out.println("Authentication failed");
         return false; // Authentication failed
     }
+
+
 
 
 }
