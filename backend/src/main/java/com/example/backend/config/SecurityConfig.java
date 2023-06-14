@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,14 +22,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    /*
-    @Override
-    protected void configure(HttpSecurity security) throws Exception
-    {
-        security.httpBasic().disable();
-    }
 
-*/
+
+
+
 
     private UserDetailsService userDetailsService;
 
@@ -42,13 +39,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authConfig -> {
+                /*.authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/").permitAll();
                     authConfig.requestMatchers("/user/**").authenticated();
                     authConfig.requestMatchers("/admin/**").denyAll();
-                })
-                .formLogin(Customizer.withDefaults()) // Login with browser and Form
-                .httpBasic(Customizer.withDefaults()); // Login with Insomnia and Basic Auth
+                })*/
+                //.formLogin(Customizer.withDefaults()) // Login with browser and Form
+                //.httpBasic(Customizer.withDefaults()) // Login with Insomnia and Basic Auth
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable);
+
+
         return http.build();
     }
 
