@@ -23,30 +23,24 @@ import java.util.Optional;
 @Service
 public class AuthenticationService {
 
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private UserService userService;
+    private final UserRepository userRepository;
 
     private final String SECRET_KEY;
 
     private Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public AuthenticationService() {
+    @Autowired
+    public AuthenticationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+
         // Generates a secure random secret key
         byte[] keyBytes = new byte[64];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(keyBytes);
         SECRET_KEY = Base64.getEncoder().encodeToString(keyBytes);
     }
-    // Other methods in the class
 
-
-
-
-
-
+    // Other methods in the class...
 
     // Methods to generate an authentication token
     private Date getExpirationDate() {
@@ -76,7 +70,6 @@ public class AuthenticationService {
         return token;
     }
 
-
     // Methods to authenticate user credentials
     public boolean authenticate(String email, String password) {
         System.out.println("authenticate executes");
@@ -84,19 +77,16 @@ public class AuthenticationService {
         System.out.println(password);
 
         if (email == null || email.isEmpty()) {
-
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
 
         if (password == null || password.isEmpty()) {
-
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
+
         // Retrieve the user from the database based on the email
-/*
-        // Here is the issue.
-        Optional<User> userOptional = Optional.ofNullable(userService.findByEmail(email));
-        // This is the issue. The program has the right strings but can't fetch the right user from the database.
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
         System.out.println(userOptional);
         System.out.println("This does too");
 
@@ -122,12 +112,10 @@ public class AuthenticationService {
                 return true; // Authentication successful
             }
         }
-*/
+
         System.out.println("Authentication failed");
         return false; // Authentication failed
     }
 
-
-
-
+    // Rest of your code...
 }
