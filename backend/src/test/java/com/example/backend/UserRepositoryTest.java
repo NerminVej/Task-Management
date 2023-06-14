@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class UserRepositoryTest {
@@ -38,8 +39,12 @@ public class UserRepositoryTest {
 
         // Call the userRepository.findByEmailIgnoreCase method
         Optional<User> result = userRepository.findByEmailIgnoreCase(email);
-        System.out.println("Yes this works it found" + result);
+        System.out.println("it found " + result);
+
         // Verify the result
         assertEquals(Optional.of(user), result);
+        assertNotNull(result.get().getId());
+        assertNotNull(result.get().getUsername());
+        assertNotNull(result.get().getPassword());
     }
 }
