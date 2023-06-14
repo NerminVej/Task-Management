@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { login } from "../config/api";
 
 interface LoginForm {
   email: string;
@@ -16,9 +17,27 @@ const LoginPage: React.FC = () => {
     setLoginForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const handleFormSubmit = (e: FormEvent) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", loginForm);
+
+    try {
+      // Perform login request using the login function
+      const response = await login(loginForm.email, loginForm.password);
+
+      if (response.status === 200) {
+        // Login successful, perform any necessary actions (e.g., redirect to dashboard)
+        console.log("Login successful");
+        // Perform the necessary action after successful login
+      } else {
+        // Login failed, display an error message or handle the failure appropriately
+        console.log("Login failed");
+        // Perform the necessary action after failed login
+      }
+    } catch (error) {
+      console.error("Error occurred during login:", error);
+      // Handle the error appropriately (e.g., display an error message)
+    }
   };
 
   return (

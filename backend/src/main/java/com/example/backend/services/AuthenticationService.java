@@ -117,5 +117,5 @@ public class AuthenticationService {
         return false; // Authentication failed
     }
 
-    // Rest of your code...
+
 }
