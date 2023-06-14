@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { login } from "../config/api";
+import TaskCreationPage from "./TaskCreationPage";
 
 interface LoginForm {
   email: string;
@@ -11,6 +12,7 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
+  const [loggedInEmail, setLoggedInEmail] = useState("");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,6 +30,8 @@ const LoginPage: React.FC = () => {
       if (response.status === 200) {
         // Login successful, perform any necessary actions (e.g., redirect to dashboard)
         console.log("Login successful");
+        setLoggedInEmail(loginForm.email); // Store the logged-in email
+
         // Perform the necessary action after successful login
       } else {
         // Login failed, display an error message or handle the failure appropriately
@@ -95,6 +99,8 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       </form>
+      {loggedInEmail && <TaskCreationPage email={loggedInEmail as string} />}
+
     </div>
   );
 };

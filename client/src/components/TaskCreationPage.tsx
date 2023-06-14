@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { createTask } from "../config/api";
 
-const TaskCreationPage: React.FC = () => {
-  const [taskName, setTaskName] = useState<string>("");
+interface TaskCreationPageProps {
+  email: string;
+}
+
+const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  const [taskName, setTaskName] = useState<string>("");
   const [status, setStatus] = useState<string>("Pending");
   const [comment, setComment] = useState<string>("");
   const [time, setTime] = useState<number>(0);
   const [errors, setErrors] = useState<string[]>([]);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
