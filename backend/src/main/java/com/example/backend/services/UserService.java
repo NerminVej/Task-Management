@@ -46,6 +46,11 @@ public class UserService {
         return userRepository.findByUsernameAndPassword(username, password);
     }
 
+    public User getUserByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        return userOptional.orElse(null);
+    }
+
 
 
 }

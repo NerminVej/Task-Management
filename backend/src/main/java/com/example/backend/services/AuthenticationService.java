@@ -27,6 +27,8 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
+    private UserService userService;
+
     private final String SECRET_KEY;
 
     private Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
@@ -77,18 +79,32 @@ public class AuthenticationService {
 
     // Methods to authenticate user credentials
     public boolean authenticate(String email, String password) {
-        System.out.println("This method executes");
+        System.out.println("authenticate executes");
 
         if (email == null || email.isEmpty()) {
+
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
 
         if (password == null || password.isEmpty()) {
+
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
-
         // Retrieve the user from the database based on the email
-        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        // Here is the issue.
+        Optional<User> userOptional = Optional.ofNullable(userService.getUserByEmail(email));
+        System.out.println(userOptional);
+        System.out.println("This does too");
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // Log the user details
+            System.out.println("User found: " + user.getUsername());
+        } else {
+            // Log that no user was found
+            System.out.println("User not found for email: " + email);
+        }
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();

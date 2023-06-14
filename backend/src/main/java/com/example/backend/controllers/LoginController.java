@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.models.LoginRequest;
 import com.example.backend.models.User;
 import com.example.backend.repositories.UserRepository;
 import com.example.backend.services.AuthenticationService;
@@ -8,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/login")
@@ -29,16 +27,18 @@ public class LoginController {
 
 
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
     @PostMapping("/")
-    public ResponseEntity<String> login(@RequestParam("email") String email,
-                                        @RequestParam("password") String password) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         System.out.println("Does this get triggered");
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
         try {
             boolean isAuthenticated = authenticationService.authenticate(email, password);
 
+            System.out.println(authenticationService.authenticate(email, password));
             if (isAuthenticated) {
                 // Authentication successful
                 User user = getUserByEmail(email);
