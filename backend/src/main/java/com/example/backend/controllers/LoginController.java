@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class LoginController {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    public LoginController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @Autowired
     private UserRepository userRepository;
@@ -28,9 +32,10 @@ public class LoginController {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<String> login(@RequestParam("email") String email,
                                         @RequestParam("password") String password) {
+        System.out.println("Does this get triggered");
         try {
             boolean isAuthenticated = authenticationService.authenticate(email, password);
 

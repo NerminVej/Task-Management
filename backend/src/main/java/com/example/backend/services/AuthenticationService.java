@@ -5,6 +5,8 @@ import com.example.backend.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +28,8 @@ public class AuthenticationService {
     private UserRepository userRepository;
 
     private final String SECRET_KEY;
+
+    private Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     public AuthenticationService() {
         // Generates a secure random secret key
@@ -73,6 +77,8 @@ public class AuthenticationService {
 
     // Methods to authenticate user credentials
     public boolean authenticate(String email, String password) {
+        System.out.println("This method executes");
+
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
