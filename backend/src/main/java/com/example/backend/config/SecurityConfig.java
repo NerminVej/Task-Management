@@ -1,4 +1,4 @@
-//package com.example.backend.config;
+package com.example.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,19 +15,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-/*
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    /*
     @Override
     protected void configure(HttpSecurity security) throws Exception
     {
         security.httpBasic().disable();
     }
-}
 
+*/
 
     private UserDetailsService userDetailsService;
 
@@ -43,8 +44,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/").permitAll();
-                    //authConfig.requestMatchers("/user/**").authenticated();
-                    //authConfig.requestMatchers("/admin/**").denyAll();
+                    authConfig.requestMatchers("/user/**").authenticated();
+                    authConfig.requestMatchers("/admin/**").denyAll();
                 })
                 .formLogin(Customizer.withDefaults()) // Login with browser and Form
                 .httpBasic(Customizer.withDefaults()); // Login with Insomnia and Basic Auth
@@ -63,4 +64,3 @@ public class SecurityConfig {
         }
     }
 }
-*/
