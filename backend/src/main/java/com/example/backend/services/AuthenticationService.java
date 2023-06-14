@@ -80,6 +80,8 @@ public class AuthenticationService {
     // Methods to authenticate user credentials
     public boolean authenticate(String email, String password) {
         System.out.println("authenticate executes");
+        System.out.println(email);
+        System.out.println(password);
 
         if (email == null || email.isEmpty()) {
 
@@ -91,9 +93,10 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
         // Retrieve the user from the database based on the email
-
+/*
         // Here is the issue.
-        Optional<User> userOptional = Optional.ofNullable(userService.getUserByEmail(email));
+        Optional<User> userOptional = Optional.ofNullable(userService.findByEmail(email));
+        // This is the issue. The program has the right strings but can't fetch the right user from the database.
         System.out.println(userOptional);
         System.out.println("This does too");
 
@@ -119,7 +122,7 @@ public class AuthenticationService {
                 return true; // Authentication successful
             }
         }
-
+*/
         System.out.println("Authentication failed");
         return false; // Authentication failed
     }

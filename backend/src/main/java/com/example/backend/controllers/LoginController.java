@@ -35,6 +35,8 @@ public class LoginController {
         System.out.println("Does this get triggered");
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
+        System.out.println(email);
+        System.out.println(password);
         try {
             boolean isAuthenticated = authenticationService.authenticate(email, password);
 
