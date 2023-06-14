@@ -1,46 +1,61 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-
-interface Assignee {
-  name: string;
-}
+import React, { useState } from "react";
+import { createTask } from "../config/api";
 
 const TaskCreationPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredAssignees, setFilteredAssignees] = useState<Assignee[]>([]);
-  const [assignees, setAssignees] = useState<Assignee[]>([]);
+  const [taskName, setTaskName] = useState<string>("");
+  const [status, setStatus] = useState<string>("Pending");
+  const [comment, setComment] = useState<string>("");
+  const [time, setTime] = useState<number>(0);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  useEffect(() => {
-    const hardcodedAssignees: Assignee[] = [
-      { name: "John Doe" },
-      { name: "Jane Smith" },
-      { name: "Bob Johnson" },
-    ];
-    setFilteredAssignees(hardcodedAssignees); // Initialize filteredAssignees with all assignees
-    setAssignees(hardcodedAssignees);
-    /*const fetchAssignees = async () => {
-      
-      try {
-        const response = await axios.get("my-api-endpoint");
-        setAssignees(response.data);
-      } catch {
-        console.log("Eror fetching assignees", Error);
-      }
-    };
-    fetchAssignees();
-    */
-  }, []);
+  const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTaskName(event.target.value);
+  };
 
-  useEffect(() => {
-    // Filter assignees based on search query
-    const filtered = assignees.filter((assignee) =>
-      assignee.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredAssignees(filtered);
-  }, [searchQuery, assignees]);
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(event.target.value);
+  };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+  const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(event.target.value);
+  };
+
+  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputTime = Number(event.target.value);
+    setTime(inputTime >= 0 ? inputTime : 0);
+  };
+
+  const handleFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    setErrors([]);
+
+    // Validate inputs
+    const validationErrors: string[] = [];
+
+    if (!taskName.trim()) {
+      validationErrors.push("Task name is required");
+    }
+
+    if (time === 0) {
+      validationErrors.push("Time should be greater than 0");
+    }
+
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    // Proceed with API calls or other logic
+    console.log("Task Name:", taskName);
+    console.log("Status:", status);
+    console.log("Comment:", comment);
+    console.log("Time:", time);
+
+    // Reset form fields
+    setTaskName("");
+    setStatus("Pending");
+    setComment("");
+    setTime(0);
   };
 
   return (
@@ -48,12 +63,19 @@ const TaskCreationPage: React.FC = () => {
       <div className="w-full max-w-md p-8 bg-white rounded-md shadow-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Task</h2>
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleFormSubmit}>
+          {errors.length > 0 && (
+            <div className="mb-4">
+              {errors.map((error, index) => (
+                <p key={index} className="text-red-500">
+                  {error}
+                </p>
+              ))}
+            </div>
+          )}
+
           <div className="mb-4">
-            <label
-              htmlFor="taskName"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
+            <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 text-left">
               Task Name
             </label>
             <input
@@ -62,78 +84,54 @@ const TaskCreationPage: React.FC = () => {
               name="taskName"
               className="input input-bordered w-full px-4 py-2"
               placeholder="Enter task name"
+              value={taskName}
+              onChange={handleTaskNameChange}
             />
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="priority"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
-              Priority
+            <label htmlFor="priority" className="block text-sm font-medium text-gray-700 text-left">
+              Status
             </label>
             <select
               id="priority"
               name="priority"
               className="input input-bordered w-full px-4 py-2"
+              value={status}
+              onChange={handleStatusChange}
             >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
+              <option value="low">Pending</option>
+              <option value="medium">In Progress</option>
             </select>
           </div>
 
           <div className="mb-4">
-            <input
-              type="text"
-              id="assigneeSearch"
-              name="assigneeSearch"
-              value={searchQuery}
-              className="input input-bordered w-full px-4 py-2"
-              placeholder="Search assignee"
-              onChange={handleSearchChange}
-            />
-            <select
-              id="assignee"
-              name="assignee"
-              className="input input-bordered w-full px-4 py-2"
-            >
-              {filteredAssignees.map((assignee, index) => (
-                <option key={index} value={assignee.name}>
-                  {assignee.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
-              Description
+            <label htmlFor="Comment" className="block text-sm font-medium text-gray-700 text-left">
+              Comment
             </label>
             <textarea
-              id="description"
-              name="description"
+              id="comment"
+              name="comment"
               rows={4}
               className="input input-bordered w-full px-4 py-2 h-24"
-              placeholder="Enter task description"
+              placeholder="Enter task comment"
+              value={comment}
+              onChange={handleCommentChange}
             ></textarea>
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="dueDate"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
-              Due Date
+            <label htmlFor="taskTime" className="block text-sm font-medium text-gray-700 text-left">
+              How much time do you want to spend?
             </label>
             <input
-              type="date"
-              id="dueDate"
-              name="dueDate"
+              type="number"
+              id="taskTime"
+              name="taskTime"
               className="input input-bordered w-full px-4 py-2"
+              placeholder="Enter time amount (in minutes)"
+              value={time}
+              onChange={handleTimeChange}
             />
           </div>
 

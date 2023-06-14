@@ -20,4 +20,15 @@ export const login = (email: string, password: string) => {
   return axios.post(url, { email, password });
 };
 
-
+// Creates a new task for a user with the provided data
+export const createTask = (taskName: string, status: string, comment: string, time: number, userId: number) => {
+  const url = `${API_BASE_URL}/users/${userId}/tasks`;
+  const taskData = {
+    taskName,
+    status,
+    comment,
+    time,
+    userId
+  };
+  return axios.post(url, taskData);
+};
