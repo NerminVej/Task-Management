@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomNotification from "./CustomNotification";
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { getTasksByUserId, getUserIdByEmail } from "../config/api";
 import "../styles/tailwind.css";
-
 
 interface Task {
   id: number;
@@ -16,6 +16,8 @@ interface Task {
   timeTracking: number;
 }
 
+
+
 interface Notification {
   id: number;
   message: string;
@@ -23,56 +25,74 @@ interface Notification {
   timestamp: string;
 }
 
-const tasks: Task[] = [
-  {
-    id: 1,
-    title: "Task 1",
-    status: "In Progress",
-    progress: 50,
-    comments: ["Comment 1", "Comment 2"],
-    attachments: ["Attachment 1", "Attachment 2"],
-    timeTracking: 120,
-  },
-  {
-    id: 2,
-    title: "Task 2",
-    status: "Completed",
-    progress: 100,
-    comments: ["Comment 3"],
-    attachments: ["Attachment 3"],
-    timeTracking: 180,
-  },
-  {
-    id: 3,
-    title: "Task 3",
-    status: "Pending",
-    progress: 0,
-    comments: [],
-    attachments: [],
-    timeTracking: 0,
-  },
-];
+interface TaskCreationPageProps {
+  email: string;
+}
 
-const TaskManagementDashboard: React.FC = () => {
-  const [taskList, setTaskList] = useState<Task[]>(tasks);
+interface TaskData {
+  id: number;
+  name: string;
+  status: string;
+  time: string;
+  userId: number;
+  comments: string[] | null;
+  attachments: string[] | null;
+}
+
+const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
+  email,
+}) => {
+  const [taskList, setTaskList] = useState<Task[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [notificationTimeout, setNotificationTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [notificationTimeout, setNotificationTimeout] =
+    useState<NodeJS.Timeout | null>(null);
   const [userId, setUserId] = useState<number>(1);
 
-  
+  useEffect(() => {
+    // Fetch the user ID based on the email
+    getUserIdByEmail(email)
+      .then((response) => {
+        const responseData = response.data;
+        const userId = responseData;
 
-// Inside your React component
-axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
-  .then(response => {
-    // Handle the response data
-    console.log(response.data);
-  })
-  .catch(error => {
-    // Handle errors
-    console.error(error);
-  });
+        if (userId) {
+          setUserId(userId);
+          console.log("The user id is: " + userId);
+        } else {
+          console.error(
+            "Failed to get user ID. Invalid response:",
+            responseData
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get user ID:", error);
+      });
+  }, [email]);
 
-
+  useEffect(() => {
+    if (userId) {
+      // Fetch tasks for the user
+      getTasksByUserId(userId)
+        .then((response) => {
+          const tasksData = response.data;
+          // Update task list by including the name property
+          const updatedTaskList = tasksData.map((taskData: TaskData) => ({
+            id: taskData.id,
+            title: taskData.name,
+            status: taskData.status,
+            comments: taskData.comments,
+            attachments: taskData.attachments,
+            timeTracking: taskData.time,
+          }));
+          setTaskList(updatedTaskList);
+          console.log(updatedTaskList);
+        })
+        .catch((error) => {
+          console.error("Failed to get tasks:", error);
+        });
+    }
+  }, [userId]);
   const addNotification = (message: string, type: string) => {
     const newNotification: Notification = {
       id: Date.now(),
@@ -134,7 +154,7 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
         if (task.id === id) {
           let progress = task.progress;
           let notificationMessage = "";
-  
+
           if (task.status !== status) {
             if (status === "In Progress") {
               progress = 50;
@@ -146,12 +166,12 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
               progress = 0;
               notificationMessage = "Task pending.";
             }
-  
+
             // Show a notification if the status has changed
             if (notificationMessage !== "") {
               // Clear all existing notifications
               setNotifications([]);
-  
+
               // Add the new notification
               const newNotification = {
                 id: Date.now(),
@@ -163,7 +183,7 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
                 ...prevNotifications,
                 newNotification,
               ]);
-  
+
               // Set a timeout to remove the notification after 5 seconds
               const timeoutId = setTimeout(() => {
                 setNotifications((prevNotifications) =>
@@ -180,8 +200,6 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
       })
     );
   };
-  
-  
 
   function handleDeleteTask(id: number): void {
     throw new Error("Function not implemented.");
@@ -199,19 +217,31 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
         />
       ))}
       {/* Task Management Dashboard */}
-      <h1 className="text-primary text-2xl font-bold my-4">Task Management Dashboard</h1>
+      <h1 className="text-primary text-2xl font-bold my-4">
+        Task Management Dashboard
+      </h1>
       <table className="w-full bg-green-100 border border-gray-200 rounded shadow">
         {/* Table Header */}
         <thead>
           <tr>
             <th className="py-3 px-4 bg-primary text-white font-bold">ID</th>
             <th className="py-3 px-4 bg-primary text-white font-bold">Title</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Status</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Progress</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Comments</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Attachments</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Time Tracking</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Actions</th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">
+              Status
+            </th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">
+              Progress
+            </th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">
+              Comments
+            </th>
+            <th className="py-3 px-4 bg-primary text-white font-bold">
+              Time Created
+            </th>
+
+            <th className="py-3 px-4 bg-primary text-white font-bold">
+              Actions
+            </th>
           </tr>
         </thead>
         {/* Table Body */}
@@ -235,29 +265,26 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
               <td className="py-3 px-4 border-b">
                 <div className="w-full h-2 bg-gray-200 rounded">
                   <div
-                    className={`h-full bg-primary rounded ${task.progress === 100 ? "bg-green-500" : ""}`}
+                    className={`h-full bg-primary rounded ${
+                      task.progress === 100 ? "bg-green-500" : ""
+                    }`}
                     style={{ width: `${task.progress}%` }}
                   ></div>
                 </div>
               </td>
               <td className="py-3 px-4 border-b">
-                <ul className="list-disc pl-4">
-                  {task.comments.map((comment, index) => (
-                    <li key={index}>{comment}</li>
-                  ))}
-                </ul>
+                {task.comments && task.comments.length > 0 ? (
+                  <ul className="list-disc pl-4">
+                    {task.comments.map((comment, index) => (
+                      <li key={index}>{comment}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No comments available.</p>
+                )}
               </td>
-              <td className="py-3 px-4 border-b">
-                <ul className="list-disc pl-4">
-                  {task.attachments.map((attachment, index) => (
-                    <li key={index}>
-                      <a href={attachment} target="_blank" rel="noopener noreferrer">
-                        Attachment {index + 1}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </td>
+
+
               <td className="py-3 px-4 border-b">{task.timeTracking}</td>
               {/* Delete Button */}
               <td className="py-3 px-4 border-b">
@@ -274,8 +301,6 @@ axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
       </table>
     </div>
   );
-  
-  
 };
 
 export default TaskManagementDashboard;

@@ -101,6 +101,7 @@ public class UserController {
 
 
     // Create a new task for a specific user
+    // Example http://localhost:8080/api/users/2/tasks
     @PostMapping("/{userId}/tasks")
     public ResponseEntity<Task> createTask(@PathVariable Long userId, @RequestBody Task task) {
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -122,18 +123,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    /*
-    @GetMapping("/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        System.out.println("does bob bob");
-        Optional<User> optionalUser = userService.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
+
 
     // This GetMapping gets the UserId of a user.
     // Example: http://localhost:8080/api/email/bob@example.com gives me the userId of bob@example.com

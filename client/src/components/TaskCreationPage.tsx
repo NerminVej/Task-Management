@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createTask, getUserIdByEmail } from "../config/api";
+import { createTask, getUserIdByEmail } from "../config/api"; // Import the necessary functions from your API service
 
 interface TaskCreationPageProps {
   email: string;
@@ -9,30 +9,26 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   const [taskName, setTaskName] = useState<string>("");
   const [status, setStatus] = useState<string>("Pending");
   const [comment, setComment] = useState<string>("");
-  const [time, setTime] = useState<number>(0);
+  const [time, setTime] = useState<string>(""); // Change the type to string
   const [errors, setErrors] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    // Fetch the user ID based on the email
-    getUserIdByEmail(email)
-      .then((response) => {
-        const responseData = response.data; // Modify this line based on the actual structure of the response
-        const userId = responseData;
-        
-        if (userId) {
-          setUserId(userId);
-          console.log("The user id is: " + userId);
-        } else {
-          console.error("Failed to get user ID. Invalid response:", responseData);
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to get user ID:", error);
-      });
+    const fetchUserId = async () => {
+      try {
+        const response = await getUserIdByEmail(email);
+
+        const id = response.data; // Extract the user ID from the response data
+
+        setUserId(id);
+      } catch (error) {
+        console.error("Failed to fetch user ID:", error);
+        // Handle the error and display an error message to the user
+      }
+    };
+
+    fetchUserId();
   }, [email]);
-  
-  
 
   const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -49,11 +45,10 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   };
 
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputTime = Number(event.target.value);
-    setTime(inputTime >= 0 ? inputTime : 0);
+    setTime(event.target.value); // Update the time state with the input value
   };
 
-  const handleFormSubmit = (event: React.FormEvent) => {
+  const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrors([]);
 
@@ -64,8 +59,12 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
       validationErrors.push("Task name is required");
     }
 
-    if (time === 0) {
-      validationErrors.push("Time should be greater than 0");
+    if (!time) {
+      validationErrors.push("Time is required");
+    }
+
+    if (!userId) {
+      validationErrors.push("User ID not found");
     }
 
     if (validationErrors.length > 0) {
@@ -73,18 +72,19 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
       return;
     }
 
-    // Proceed with API calls or other logic
-    console.log("Task Name:", taskName);
-    console.log("Status:", status);
-    console.log("Comment:", comment);
-    console.log("Time:", time);
-    console.log("User ID:", userId);
+    try {
+      // Call the createTask function with the necessary data
+      await createTask(taskName, status, comment, time, userId || 0);
 
-    // Reset form fields
-    setTaskName("");
-    setStatus("Pending");
-    setComment("");
-    setTime(0);
+      // Reset form fields
+      setTaskName("");
+      setStatus("Pending");
+      setComment("");
+      setTime("");
+    } catch (error) {
+      console.error("Failed to create task:", error);
+      // Handle the error and display an error message to the user
+    }
   };
 
   return (
@@ -135,8 +135,8 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
               value={status}
               onChange={handleStatusChange}
             >
-              <option value="low">Pending</option>
-              <option value="medium">In Progress</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
             </select>
           </div>
 
@@ -166,11 +166,11 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
               How much time do you want to spend?
             </label>
             <input
-              type="number"
+              type="datetime-local" // Change the input type to datetime-local
               id="taskTime"
               name="taskTime"
               className="input input-bordered w-full px-4 py-2"
-              placeholder="Enter time amount (in minutes)"
+              placeholder="Enter time amount"
               value={time}
               onChange={handleTimeChange}
             />

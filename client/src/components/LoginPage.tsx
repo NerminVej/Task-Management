@@ -107,7 +107,7 @@ const LoginPage: React.FC = () => {
 
       {loggedInEmail && showTaskCreationPage && (
         <div>
-          <TaskManagementDashboard></TaskManagementDashboard>
+          <TaskManagementDashboard email={loggedInEmail as string}></TaskManagementDashboard>
           <TaskCreationPage email={loggedInEmail as string} />
         </div>
       )}

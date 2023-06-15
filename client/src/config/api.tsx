@@ -4,7 +4,7 @@ const API_BASE_URL = 'http://localhost:8080/api';
 
 // Gets all the tasks of one user with his id.
 export const getTasksByUserId = (userId: number) => {
-  const url = `${API_BASE_URL}/users/${userId}/tasks`;
+  const url = `${API_BASE_URL}/tasks/user/${userId}`;
   return axios.get(url);
 };
 
@@ -21,21 +21,20 @@ export const login = (email: string, password: string) => {
 };
 
 // Creates a new task for a user with the provided data
-export const createTask = (taskName: string, status: string, comment: string, time: number, userId: number) => {
+export const createTask = (
+  taskName: string,
+  status: string,
+  comment: string | null,
+  time: string, //This has to be the real time format
+  userId: number
+) => {
   const url = `${API_BASE_URL}/users/${userId}/tasks`;
-  const taskData = {
-    taskName,
-    status,
-    comment,
-    time,
-    userId
-  };
-  return axios.post(url, taskData);
+  return axios.post(url, { name: taskName, status, comment, time, userId });
 };
 
-// Implemment getUserIdByEmail here that gets the ID of an user so we can create tasks.
 // Gets the user ID by email
 export const getUserIdByEmail = (email: string) => {
   const url = `${API_BASE_URL}/users/email/${encodeURIComponent(email)}`;
   return axios.get(url);
 };
+
