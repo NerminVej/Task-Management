@@ -9,7 +9,6 @@ function App() {
   return (
     <div className="App">
       <TaskManagementDashboard></TaskManagementDashboard>
-      <TaskCreationPage></TaskCreationPage>
       <LoginPage></LoginPage>
       <RegistrationPage></RegistrationPage>
     </div>
