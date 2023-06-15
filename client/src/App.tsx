@@ -8,7 +8,6 @@ import TaskManagementDashboard from "./components/TaskManagementDashboard";
 function App() {
   return (
     <div className="App">
-      <TaskManagementDashboard></TaskManagementDashboard>
       <LoginPage></LoginPage>
       <RegistrationPage></RegistrationPage>
     </div>
