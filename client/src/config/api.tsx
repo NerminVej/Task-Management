@@ -34,4 +34,8 @@ export const createTask = (taskName: string, status: string, comment: string, ti
 };
 
 // Implemment getUserIdByEmail here that gets the ID of an user so we can create tasks.
-
+// Gets the user ID by email
+export const getUserIdByEmail = (email: string) => {
+  const url = `${API_BASE_URL}/users/email/${encodeURIComponent(email)}`;
+  return axios.get(url);
+};

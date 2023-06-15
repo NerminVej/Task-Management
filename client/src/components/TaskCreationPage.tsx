@@ -1,16 +1,38 @@
-import React, { useState } from "react";
-import { createTask } from "../config/api";
+import React, { useState, useEffect } from "react";
+import { createTask, getUserIdByEmail } from "../config/api";
 
 interface TaskCreationPageProps {
   email: string;
 }
 
-const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  const [taskName, setTaskName] = useState<string>("");
+const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
+  const [taskName, setTaskName] = useState<string>("");
   const [status, setStatus] = useState<string>("Pending");
   const [comment, setComment] = useState<string>("");
   const [time, setTime] = useState<number>(0);
   const [errors, setErrors] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Fetch the user ID based on the email
+    getUserIdByEmail(email)
+      .then((response) => {
+        const responseData = response.data; // Modify this line based on the actual structure of the response
+        const userId = responseData;
+        
+        if (userId) {
+          setUserId(userId);
+          console.log("The user id is: " + userId);
+        } else {
+          console.error("Failed to get user ID. Invalid response:", responseData);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get user ID:", error);
+      });
+  }, [email]);
+  
+  
 
   const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -20,7 +42,9 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  cons
     setStatus(event.target.value);
   };
 
-  const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleCommentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setComment(event.target.value);
   };
 
@@ -54,6 +78,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  cons
     console.log("Status:", status);
     console.log("Comment:", comment);
     console.log("Time:", time);
+    console.log("User ID:", userId);
 
     // Reset form fields
     setTaskName("");
@@ -79,7 +104,10 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  cons
           )}
 
           <div className="mb-4">
-            <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 text-left">
+            <label
+              htmlFor="taskName"
+              className="block text-sm font-medium text-gray-700 text-left"
+            >
               Task Name
             </label>
             <input
@@ -94,7 +122,10 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  cons
           </div>
 
           <div className="mb-4">
-            <label htmlFor="priority" className="block text-sm font-medium text-gray-700 text-left">
+            <label
+              htmlFor="priority"
+              className="block text-sm font-medium text-gray-700 text-left"
+            >
               Status
             </label>
             <select
@@ -110,7 +141,10 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  cons
           </div>
 
           <div className="mb-4">
-            <label htmlFor="Comment" className="block text-sm font-medium text-gray-700 text-left">
+            <label
+              htmlFor="Comment"
+              className="block text-sm font-medium text-gray-700 text-left"
+            >
               Comment
             </label>
             <textarea
@@ -125,7 +159,10 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {  cons
           </div>
 
           <div className="mb-4">
-            <label htmlFor="taskTime" className="block text-sm font-medium text-gray-700 text-left">
+            <label
+              htmlFor="taskTime"
+              className="block text-sm font-medium text-gray-700 text-left"
+            >
               How much time do you want to spend?
             </label>
             <input

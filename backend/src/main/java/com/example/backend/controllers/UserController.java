@@ -136,6 +136,7 @@ public class UserController {
     }*/
 
     // This GetMapping gets the UserId of a user.
+    // Example: http://localhost:8080/api/email/bob@example.com gives me the userId of bob@example.com
     @GetMapping("/email/{email:.+}")
     public ResponseEntity<Long> getUserIdByEmail(@PathVariable("email") String email) {
         Optional<User> optionalUser = userService.findByEmail(email);

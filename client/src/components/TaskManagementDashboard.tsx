@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import "../styles/tailwind.css";
 
+
 interface Task {
   id: number;
   title: string;
@@ -58,6 +59,7 @@ const TaskManagementDashboard: React.FC = () => {
   const [notificationTimeout, setNotificationTimeout] = useState<NodeJS.Timeout | null>(null);
   const [userId, setUserId] = useState<number>(1);
 
+  
 
 // Inside your React component
 axios.get(`http://localhost:8080/api/users/${userId}/tasks`)
