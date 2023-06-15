@@ -198,7 +198,7 @@ const RegistrationPage: React.FC = () => {
                 className="btn bg-secondary text-white font-medium px-8 py-2 rounded-md shadow-md hover:bg-opacity-90 transition-colors duration-300 ease-in-out"
                 onClick={handleLoginClick}
               >
-                Log In
+                Log In Instead
               </button>
             </div>
           </div>
