@@ -33,9 +33,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    /*public void deleteTask(Long id) {
-        taskRepository.delete(id);
-    }*/
+
 
     public void deleteTaskById(Long taskId) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
@@ -50,5 +48,14 @@ public class TaskService {
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepository.findByUserId(userId);
     }
+
+    public void deleteTask(Task task) {
+        taskRepository.delete(task);
+    }
+
+    public Task saveTask(Task task) {
+        return taskRepository.save(task);
+    }
+
 
 }

@@ -23,56 +23,26 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime time;
 
+    @Column
+    private String comment;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-/*
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
-
-
-
-    public Task(User user) {
-        this.user = user;
-    }
-*/
     public Task() {
     }
 
-
-
-
-
-    public Task(Long id, String name, String status, LocalDateTime time) {
+    public Task(Long id, String name, String status, LocalDateTime time, String comment, Long userId) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.time = time;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
+        this.comment = comment;
         this.userId = userId;
     }
 
-    public Task(Long id) {
-        this.id = id;
-    }
+    // Getters and setters for all fields
 
-/*
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-*/
     public Long getId() {
         return id;
     }
@@ -105,6 +75,21 @@ public class Task {
         this.time = time;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     @Override
     public String toString() {
@@ -113,7 +98,8 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
                 ", time=" + time +
-                // Additional fields
+                ", comment='" + comment + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

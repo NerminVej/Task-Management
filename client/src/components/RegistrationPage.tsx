@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
+import LoginPage from "./LoginPage";
 import { signup } from "../config/api";
 
 const RegistrationPage: React.FC = () => {
@@ -8,6 +9,7 @@ const RegistrationPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [repeatedPassword, setRepeatedPassword] = useState<string>("");
   const [passwordStrength, setPasswordStrength] = useState<string>("");
+  const [showLoginPage, setShowLoginPage] = useState<boolean>(false);
 
   // Function that handles the signup
   const handleSignup = () => {
@@ -56,6 +58,14 @@ const RegistrationPage: React.FC = () => {
   const handleRepeatedPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRepeatedPassword(e.target.value);
   };
+
+  const handleLoginClick = () => {
+    setShowLoginPage(true);
+  };
+
+  if (showLoginPage) {
+    return <LoginPage />;
+  }
 
   function updatePasswordStrengthIndicator(strength: string) {}
 
@@ -165,13 +175,33 @@ const RegistrationPage: React.FC = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
-            //onSubmit={handleSignup}
-          >
-            Sign Up
-          </button>
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
+            >
+              Sign Up
+            </button>
+
+            <div className="text-right">
+              <p className="text-sm text-gray-600 mb-2">
+                Do you already have an account?{" "}
+                <span
+                  className="text-primary font-medium cursor-pointer"
+                  onClick={handleLoginClick}
+                >
+                  Log in instead!
+                </span>
+              </p>
+              <button
+                type="button"
+                className="btn bg-secondary text-white font-medium px-8 py-2 rounded-md shadow-md hover:bg-opacity-90 transition-colors duration-300 ease-in-out"
+                onClick={handleLoginClick}
+              >
+                Log In
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

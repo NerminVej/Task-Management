@@ -23,6 +23,7 @@ public class TaskController {
 
     private final TaskService taskService;
 
+
     private final UserService userService;
 
     public TaskController(TaskService taskService, UserService userService) {
@@ -72,18 +73,53 @@ public class TaskController {
 
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {
-        Task updatedTask = taskService.updateTask(id, task);
-        return ResponseEntity.ok(updatedTask);
+    @PutMapping("/user/{userId}/{taskId}")
+    public ResponseEntity<Task> updateTaskForUser(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody Task updatedTask) {
+        Optional<User> optionalUser = userService.getUserById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Task> tasks = user.getTasks();
+            Optional<Task> optionalTask = tasks.stream().filter(task -> task.getId().equals(taskId)).findFirst();
+            if (optionalTask.isPresent()) {
+                Task task = optionalTask.get();
+                // Update the task properties
+                task.setName(updatedTask.getName());
+                task.setStatus(updatedTask.getStatus());
+                task.setComment(updatedTask.getComment());
+                task.setTime(updatedTask.getTime());
+                // Save the updated task
+                Task savedTask = taskService.saveTask(task);
+                return ResponseEntity.ok(savedTask);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+
+    // http://localhost:8080/api/tasks/user/1/7 This deletes the task with the id of 7 inside the user with the id of 1.
+    @DeleteMapping("/user/{userId}/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        Optional<Task> optionalTask = taskService.getTaskById(taskId);
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+            taskService.deleteTask(task);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    /*
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTaskById(id);
         return ResponseEntity.noContent().build();
     }
-
+*/
 
 
 }

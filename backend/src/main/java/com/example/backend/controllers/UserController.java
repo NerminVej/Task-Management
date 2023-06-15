@@ -122,6 +122,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /*
     @GetMapping("/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         System.out.println("does bob bob");
@@ -132,7 +133,21 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }*/
+
+    // This GetMapping gets the UserId of a user.
+    @GetMapping("/email/{email:.+}")
+    public ResponseEntity<Long> getUserIdByEmail(@PathVariable("email") String email) {
+        Optional<User> optionalUser = userService.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return ResponseEntity.ok(user.getId());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+
 
 
 }
