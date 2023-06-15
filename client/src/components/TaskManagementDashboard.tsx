@@ -3,7 +3,7 @@ import CustomNotification from "./CustomNotification";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { getTasksByUserId, getUserIdByEmail } from "../config/api";
+import { getTasksByUserId, getUserIdByEmail, deleteTask } from "../config/api";
 import "../styles/tailwind.css";
 
 interface Task {
@@ -15,8 +15,6 @@ interface Task {
   attachments: string[];
   timeTracking: number;
 }
-
-
 
 interface Notification {
   id: number;
@@ -201,9 +199,36 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     );
   };
 
-  function handleDeleteTask(id: number): void {
-    throw new Error("Function not implemented.");
+  function handleDeleteTask(taskId: number): void {
+    // Call the deleteTask function from the API file
+    deleteTask(userId, taskId)
+      .then((response) => {
+        // Remove the task from the task list
+        setTaskList((prevTasks) =>
+          prevTasks.filter((task) => task.id !== taskId)
+        );
+        // Show a notification for successful deletion
+        addNotification("Task deleted.", "success");
+  
+        // Set a timeout to remove the notification after 5 seconds
+        const timeoutId = setTimeout(() => {
+          setNotifications((prevNotifications) =>
+            prevNotifications.filter(
+              (notification) => notification.message !== "Task deleted."
+            )
+          );
+        }, 5000);
+  
+        // Store the timeoutId in state to clear it later if needed
+        setNotificationTimeout(timeoutId);
+      })
+      .catch((error) => {
+        console.error("Failed to delete task:", error);
+        // Show a notification for failed deletion
+        addNotification("Failed to delete task.", "error");
+      });
   }
+  
 
   return (
     <div className="container mx-auto px-4">
@@ -283,7 +308,6 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                   <p>No comments available.</p>
                 )}
               </td>
-
 
               <td className="py-3 px-4 border-b">{task.timeTracking}</td>
               {/* Delete Button */}

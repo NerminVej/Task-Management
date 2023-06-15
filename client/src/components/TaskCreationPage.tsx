@@ -104,13 +104,13 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
       // Handle the error and display an error message to the user
     }
   };
-
+/*
   if (!isLoggedIn) {
     return (
       <LoginPage></LoginPage>
     );
   }
-
+*/
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-md shadow-md">

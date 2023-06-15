@@ -38,3 +38,10 @@ export const getUserIdByEmail = (email: string) => {
   return axios.get(url);
 };
 
+// Deletes a Task from the database that the user holds
+export const deleteTask = (userId: number, taskId: number) => {
+  const url = `${API_BASE_URL}/tasks/user/${userId}/${taskId}`;
+  return axios.delete(url);
+};
+
+
