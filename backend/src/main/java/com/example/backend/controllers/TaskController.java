@@ -73,13 +73,24 @@ public class TaskController {
 
 
 
+    // http://localhost:8080/api/tasks/user/1/4 This updates the task with the id of 4 of the user with the id 1.
     @PutMapping("/user/{userId}/{taskId}")
     public ResponseEntity<Task> updateTaskForUser(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody Task updatedTask) {
+
         Optional<User> optionalUser = userService.getUserById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            List<Task> tasks = user.getTasks();
-            Optional<Task> optionalTask = tasks.stream().filter(task -> task.getId().equals(taskId)).findFirst();
+
+            // the problem is this line. It results into us getting an empty list.
+            List<Task> tasks = taskService.getTasksByUserId(userId);
+
+            Optional<Task> optionalTask = tasks.stream().filter(task -> {
+                System.out.println("Task ID: " + task.getId());
+                System.out.println("Target Task ID: " + taskId);
+                return task.getId().equals(taskId);
+            }).findFirst();
+
+
             if (optionalTask.isPresent()) {
                 Task task = optionalTask.get();
                 // Update the task properties
