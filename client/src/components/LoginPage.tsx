@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { login } from "../config/api";
 import TaskCreationPage from "./TaskCreationPage";
 import TaskManagementDashboard from "./TaskManagementDashboard";
+import RegistrationPage from "./RegistrationPage";
 
 interface LoginForm {
   email: string;
@@ -15,6 +16,8 @@ const LoginPage: React.FC = () => {
   });
   const [loggedInEmail, setLoggedInEmail] = useState<string | null>(null);
   const [showTaskCreationPage, setShowTaskCreationPage] = useState(false);
+  const [showRegistrationPage, setShowRegistrationPage] = useState(false);
+
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,12 +37,9 @@ const LoginPage: React.FC = () => {
         console.log("Login successful");
         setLoggedInEmail(loginForm.email); // Store the logged-in email
         setShowTaskCreationPage(true); // Show the TaskCreationPage
-
-        // Perform the necessary action after successful login
       } else {
         // Login failed, display an error message or handle the failure appropriately
         console.log("Login failed");
-        // Perform the necessary action after failed login
       }
     } catch (error) {
       console.error("Error occurred during login:", error);
@@ -47,9 +47,17 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const handleSignUpClick = () => {
+    setShowRegistrationPage(true); // Show the RegistrationPage
+  };
+
+  const handleRegistrationSuccess = () => {
+    setShowRegistrationPage(false); // Hide the RegistrationPage
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      {!loggedInEmail && (
+      {!loggedInEmail && !showRegistrationPage && (
         <form
           onSubmit={handleFormSubmit}
           className="p-4 bg-white rounded-md shadow-md"
@@ -101,13 +109,28 @@ const LoginPage: React.FC = () => {
                 Login
               </button>
             </div>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={handleSignUpClick}
+                className="text-primary font-medium"
+              >
+                Sign Up
+              </button>
+            </div>
           </div>
         </form>
       )}
 
+      {showRegistrationPage && (
+        <RegistrationPage
+          
+        />
+      )}
+
       {loggedInEmail && showTaskCreationPage && (
         <div>
-          <TaskManagementDashboard email={loggedInEmail as string}></TaskManagementDashboard>
+          <TaskManagementDashboard email={loggedInEmail as string} />
           <TaskCreationPage email={loggedInEmail as string} />
         </div>
       )}

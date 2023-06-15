@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createTask, getUserIdByEmail } from "../config/api"; // Import the necessary functions from your API service
+import LoginPage from "./LoginPage";
 
 interface TaskCreationPageProps {
   email: string;
@@ -12,6 +13,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   const [time, setTime] = useState<string>(""); // Change the type to string
   const [errors, setErrors] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Track login state
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -29,6 +31,22 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
 
     fetchUserId();
   }, [email]);
+
+  //Handles the user being logged in even after a refresh.
+  useEffect(() => {
+    const sessionToken = localStorage.getItem('sessionToken');
+    setIsLoggedIn(!!sessionToken); // Set login state based on session token presence
+  }, []);
+
+  const handleLogin = (token: string) => {
+    localStorage.setItem('sessionToken', token);
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('sessionToken');
+    setIsLoggedIn(false);
+  };
 
   const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -86,6 +104,12 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
       // Handle the error and display an error message to the user
     }
   };
+
+  if (!isLoggedIn) {
+    return (
+      <LoginPage></LoginPage>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
