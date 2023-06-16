@@ -119,7 +119,7 @@ const RegistrationPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
+              className="bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
             >
               Sign Up
             </button>
@@ -136,7 +136,7 @@ const RegistrationPage: React.FC = () => {
               </p>
               <button
                 type="button"
-                className="btn bg-secondary text-white font-medium px-8 py-2 rounded-md shadow-md hover:bg-opacity-90 transition-colors duration-300 ease-in-out"
+                className="bg-secondary text-white font-medium px-8 py-2 rounded-md shadow-md hover:bg-opacity-90 transition-colors duration-300 ease-in-out"
                 onClick={handleLoginClick}
               >
                 Log In Instead
