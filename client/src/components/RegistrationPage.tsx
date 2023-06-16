@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 import LoginPage from "./LoginPage";
 import { signup } from "../config/api";
+import FormField from "./FormField";
 
 const RegistrationPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -11,9 +12,7 @@ const RegistrationPage: React.FC = () => {
   const [passwordStrength, setPasswordStrength] = useState<string>("");
   const [showLoginPage, setShowLoginPage] = useState<boolean>(false);
 
-  // Function that handles the signup
   const handleSignup = () => {
-    // Check if the email is a valid email.
     if (
       isEmailValid(email) &&
       (checkPasswordStrength(password) === "good" ||
@@ -33,7 +32,6 @@ const RegistrationPage: React.FC = () => {
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Call the handleSignup function so that if the signup button gets hit that the function gets triggered.
     handleSignup();
   };
 
@@ -48,11 +46,8 @@ const RegistrationPage: React.FC = () => {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-    // We check the password strength here
     const passwordStrength = checkPasswordStrength(newPassword);
-    // Call the updater function to update the visual indicator.
     setPasswordStrength(passwordStrength);
-    updatePasswordStrengthIndicator(passwordStrength);
   };
 
   const handleRepeatedPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -67,113 +62,59 @@ const RegistrationPage: React.FC = () => {
     return <LoginPage />;
   }
 
-  function updatePasswordStrengthIndicator(strength: string) {}
+  const updatePasswordStrengthIndicator = (strength: string) => {
+    return <PasswordStrengthIndicator strength={strength} />;
+  };
 
-  // This is the password strength checker. We can improve upon this
-  // We can set up more validations and give the user inputs to what is missing inside of the password.
-  function checkPasswordStrength(password: string): string {
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasUpperCase = /[A-Z]/.test(password);
-
-    if (password.length < 8) {
-      return "weak";
-    } else if (
-      password.length >= 8 &&
-      password.length <= 12 &&
-      hasSpecialChar &&
-      hasNumber &&
-      (hasLowerCase || hasUpperCase)
-    ) {
-      return "good";
-    } else if (
-      password.length > 12 &&
-      hasSpecialChar &&
-      hasNumber &&
-      hasLowerCase &&
-      hasUpperCase
-    ) {
+  const checkPasswordStrength = (password: string): string => {
+    // Define your criteria for password strength
+    const weakRegex = /^(?=.*[A-Za-z]).{6,}$/;
+    const goodRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
+    const strongRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{10,}$/;
+  
+    if (strongRegex.test(password)) {
       return "strong";
+    } else if (goodRegex.test(password)) {
+      return "good";
+    } else if (weakRegex.test(password)) {
+      return "weak";
     } else {
-      return "invalid";
+      return ""; // or handle the case when the password doesn't meet any criteria
     }
-  }
+  };
+  
 
-  function isEmailValid(email: string): boolean {
-    // regex to validate if an email address is valid or not.
+  const isEmailValid = (email: string): boolean => {
+    // Simple email validation using a regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-  }
+  };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleFormSubmit}
-        className="p-4 bg-white rounded-md shadow-md"
-      >
+      <form onSubmit={handleFormSubmit} className="p-4 bg-white rounded-md shadow-md">
         <div className="space-y-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Sign up for the Task Management Application
           </h1>
 
-          <div>
-            <label htmlFor="name" className="block text-primary mb-1">
-              Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={handleNameChange}
-              className="input input-bordered w-full"
-            />
-          </div>
+          <FormField label="Name" type="text" value={name} onChange={handleNameChange} />
+          <FormField label="Email" type="email" value={email} onChange={handleEmailChange} />
+          <FormField label="Password" type="password" value={password} onChange={handlePasswordChange} />
+          <FormField
+            label="Confirm Password"
+            type="password"
+            value={repeatedPassword}
+            onChange={handleRepeatedPasswordChange}
+          />
 
-          <div>
-            <label htmlFor="email" className="block text-primary mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-primary mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="repeatedPassword"
-              className="block text-primary mb-1"
-            >
-              Confirm Password
-            </label>
-            <input
-              id="repeatedPassword"
-              type="password"
-              value={repeatedPassword}
-              onChange={handleRepeatedPasswordChange}
-              className="input input-bordered w-full"
-            />
-            <div className="top-2">
-              <PasswordStrengthIndicator strength={passwordStrength} />
+          {passwordStrength && (
+            <div className="my-4">
+              {updatePasswordStrengthIndicator(passwordStrength)}
             </div>
-          </div>
+          )}
+          
 
           <div className="flex items-center justify-between">
             <button
