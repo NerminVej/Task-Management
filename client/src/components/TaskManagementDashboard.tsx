@@ -132,11 +132,32 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       type,
       timestamp: new Date().toLocaleString(),
     };
-
-    setNotifications((prevNotifications) => [
-      ...prevNotifications,
-      newNotification,
-    ]);
+  
+    setNotifications((prevNotifications) => {
+      // Check if a notification with the same message already exists
+      const existingNotification = prevNotifications.find(
+        (notification) => notification.message === message
+      );
+  
+      if (existingNotification) {
+        // If the notification already exists, return the previous notifications array
+        return prevNotifications;
+      } else {
+        // If the notification is new, add it to the notifications array
+        const updatedNotifications = [...prevNotifications, newNotification];
+  
+        // Set a timeout to remove the notification after 5 seconds
+        setTimeout(() => {
+          setNotifications((prevNotifications) =>
+            prevNotifications.filter(
+              (notification) => notification.id !== newNotification.id
+            )
+          );
+        }, 5000);
+  
+        return updatedNotifications;
+      }
+    });
   };
 
   const assignTask = () => {
@@ -189,9 +210,16 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       prevTasks.map((task) => {
         if (task.id === id && task.status !== status) {
           const progress = calculateProgress(status);
-  
+
           // Send PUT request to update task status
-          updateTaskStatus(userId, task.id, status, taskData.name, taskData.time, taskData.comment)
+          updateTaskStatus(
+            userId,
+            task.id,
+            status,
+            taskData.name,
+            taskData.time,
+            taskData.comment
+          )
             .then(() => {
               // Update the task status and progress in the state
               const updatedTask = { ...task, status, progress };
@@ -199,14 +227,16 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                 ...prevProgress,
                 [id]: progress,
               }));
+
+              // Add a notification when the status is changed
+              addNotification(`Task status changed to ${status}.`, "success");
+
               return updatedTask;
             })
             .then((updatedTask) => {
               // Update the task status in the state
               setTaskList((prevTasks) =>
-                prevTasks.map((task) =>
-                  task.id === id ? updatedTask : task
-                )
+                prevTasks.map((task) => (task.id === id ? updatedTask : task))
               );
             })
             .catch((error) => {
@@ -218,7 +248,6 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       })
     );
   };
-
   // Assuming you have access to the `taskData` object
   const handleChange = (
     id: number,
