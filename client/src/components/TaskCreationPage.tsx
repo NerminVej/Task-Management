@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createTask, getUserIdByEmail } from "../config/api"; // Import the necessary functions from your API service
+import { createTask, getUserIdByEmail } from "../config/api";
 import LoginPage from "./LoginPage";
 
 interface TaskCreationPageProps {
@@ -10,41 +10,37 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   const [taskName, setTaskName] = useState<string>("");
   const [status, setStatus] = useState<string>("Pending");
   const [comment, setComment] = useState<string>("");
-  const [time, setTime] = useState<string>(""); // Change the type to string
+  const [time, setTime] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const response = await getUserIdByEmail(email);
-
-        const id = response.data; // Extract the user ID from the response data
-
+        const id = response.data;
         setUserId(id);
       } catch (error) {
         console.error("Failed to fetch user ID:", error);
-        // Handle the error and display an error message to the user
       }
     };
 
     fetchUserId();
   }, [email]);
 
-  //Handles the user being logged in even after a refresh.
   useEffect(() => {
-    const sessionToken = localStorage.getItem('sessionToken');
-    setIsLoggedIn(!!sessionToken); // Set login state based on session token presence
+    const sessionToken = localStorage.getItem("sessionToken");
+    setIsLoggedIn(!!sessionToken);
   }, []);
 
   const handleLogin = (token: string) => {
-    localStorage.setItem('sessionToken', token);
+    localStorage.setItem("sessionToken", token);
     setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('sessionToken');
+    localStorage.removeItem("sessionToken");
     setIsLoggedIn(false);
   };
 
@@ -63,14 +59,13 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   };
 
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTime(event.target.value); // Update the time state with the input value
+    setTime(event.target.value);
   };
 
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrors([]);
 
-    // Validate inputs
     const validationErrors: string[] = [];
 
     if (!taskName.trim()) {
@@ -79,6 +74,11 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
 
     if (!time) {
       validationErrors.push("Time is required");
+    } else {
+      const parsedTime = Date.parse(time);
+      if (isNaN(parsedTime)) {
+        validationErrors.push("Please enter a valid time");
+      }
     }
 
     if (!userId) {
@@ -91,26 +91,16 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
     }
 
     try {
-      // Call the createTask function with the necessary data
       await createTask(taskName, status, comment, time, userId || 0);
-
-      // Reset form fields
       setTaskName("");
       setStatus("Pending");
       setComment("");
       setTime("");
     } catch (error) {
       console.error("Failed to create task:", error);
-      // Handle the error and display an error message to the user
     }
   };
-/*
-  if (!isLoggedIn) {
-    return (
-      <LoginPage></LoginPage>
-    );
-  }
-*/
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-md shadow-md">
@@ -187,17 +177,22 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
               htmlFor="taskTime"
               className="block text-sm font-medium text-gray-700 text-left"
             >
-              How much time do you want to spend?
+              When do you want this task to be done?
             </label>
             <input
-              type="datetime-local" // Change the input type to datetime-local
-              id="taskTime"
-              name="taskTime"
-              className="input input-bordered w-full px-4 py-2"
-              placeholder="Enter time amount"
-              value={time}
-              onChange={handleTimeChange}
-            />
+  type="datetime-local"
+  id="taskTime"
+  name="taskTime"
+  className="input input-bordered w-full px-4 py-2"
+  placeholder="Enter time amount"
+  value={time}
+  onChange={handleTimeChange}
+  min={new Date().toLocaleString('sv-SE', { timeZone: 'Europe/Berlin' }).slice(0, 16)}
+/>
+
+
+
+
           </div>
 
           <div className="flex justify-end">
