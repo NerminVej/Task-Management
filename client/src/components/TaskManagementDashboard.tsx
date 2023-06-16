@@ -81,16 +81,21 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         .then((response) => {
           const tasksData = response.data;
           // Update task list by including the name property
-          const updatedTaskList = tasksData.map((taskData: TaskData) => ({
-            id: taskData.id,
-            title: taskData.name,
-            status: taskData.status,
-            comments: taskData.comments,
-            attachments: taskData.attachments,
-            timeTracking: taskData.time,
-          }));
+          const updatedTaskList = tasksData.map((taskData: TaskData) => {
+            const progress = calculateProgress(taskData.status);
+            return {
+              id: taskData.id,
+              title: taskData.name,
+              status: taskData.status,
+              comments: taskData.comments,
+              attachments: taskData.attachments,
+              timeTracking: taskData.time,
+              // Responsible for handling that the progress bar gets changed when logging in.
+              progress: progress,
+            };
+          });
           setTaskList(updatedTaskList);
-
+  
           // Update the task progress
           const updatedTaskProgress: { [taskId: number]: number } = {};
           updatedTaskList.forEach((task: Task) => {
@@ -103,7 +108,17 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         });
     }
   }, [userId]);
-
+  
+  const calculateProgress = (status: string): number => {
+    if (status === "Completed") {
+      return 100;
+    } else if (status === "In Progress") {
+      return 50;
+    } else {
+      return 0;
+    }
+  };
+  
   const addNotification = (message: string, type: string) => {
     const newNotification: Notification = {
       id: Date.now(),
