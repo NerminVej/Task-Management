@@ -3,8 +3,14 @@ import CustomNotification from "./CustomNotification";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { getTasksByUserId, getUserIdByEmail, deleteTask } from "../config/api";
+import {
+  getTasksByUserId,
+  getUserIdByEmail,
+  deleteTask,
+  updateTaskStatus,
+} from "../config/api";
 import "../styles/tailwind.css";
+import "../styles/dashboardStyle.css";
 
 interface Task {
   id: number;
@@ -174,66 +180,59 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     }
   };
 
-  const handleStatusChange = (id: number, status: string) => {
+  const handleStatusChange = (
+    id: number,
+    status: string,
+    taskData: { name: string; time: string; comment: string }
+  ) => {
     setTaskList((prevTasks) =>
       prevTasks.map((task) => {
-        if (task.id === id) {
-          let progress = task.progress;
-          let notificationMessage = "";
-
-          if (task.status !== status) {
-            if (status === "In Progress") {
-              progress = 50;
-              notificationMessage = "Task in progress.";
-            } else if (status === "Completed") {
-              progress = 100;
-              notificationMessage = "Task completed.";
-            } else if (status === "Pending") {
-              progress = 0;
-              notificationMessage = "Task pending.";
-            }
-
-            // Update the task progress in the state
-            setTaskProgress((prevProgress) => ({
-              ...prevProgress,
-              [id]: progress,
-            }));
-
-            // Show a notification if the status has changed
-            if (notificationMessage !== "") {
-              // Clear all existing notifications
-              setNotifications([]);
-
-              // Add the new notification
-              const newNotification = {
-                id: Date.now(),
-                message: notificationMessage,
-                type: "success",
-                timestamp: new Date().toLocaleString(),
-              };
-              setNotifications((prevNotifications) => [
-                ...prevNotifications,
-                newNotification,
-              ]);
-
-              // Set a timeout to remove the notification after 5 seconds
-              const timeoutId = setTimeout(() => {
-                setNotifications((prevNotifications) =>
-                  prevNotifications.filter(
-                    (notification) => notification.id !== newNotification.id
-                  )
-                );
-              }, 5000);
-              setNotificationTimeout(timeoutId);
-            }
-
-            // Update the task status and progress
-            return { ...task, status, progress };
-          }
+        if (task.id === id && task.status !== status) {
+          const progress = calculateProgress(status);
+  
+          // Send PUT request to update task status
+          updateTaskStatus(userId, task.id, status, taskData.name, taskData.time, taskData.comment)
+            .then(() => {
+              // Update the task status and progress in the state
+              const updatedTask = { ...task, status, progress };
+              setTaskProgress((prevProgress) => ({
+                ...prevProgress,
+                [id]: progress,
+              }));
+              return updatedTask;
+            })
+            .then((updatedTask) => {
+              // Update the task status in the state
+              setTaskList((prevTasks) =>
+                prevTasks.map((task) =>
+                  task.id === id ? updatedTask : task
+                )
+              );
+            })
+            .catch((error) => {
+              console.error("Failed to update task status:", error);
+              return task;
+            });
         }
         return task;
       })
     );
+  };
+
+  // Assuming you have access to the `taskData` object
+  const handleChange = (
+    id: number,
+    status: string,
+    name: string,
+    time: string,
+    comment: string
+  ) => {
+    const taskData = {
+      name: name,
+      time: time,
+      comment: comment,
+    };
+    handleStatusChange(id, status, taskData);
   };
 
   function handleDeleteTask(taskId: number): void {
@@ -267,7 +266,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   }
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="dashboard">
       {/* Notifications */}
       {notifications.map((notification) => (
         <CustomNotification
@@ -278,31 +277,18 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         />
       ))}
       {/* Task Management Dashboard */}
-      <h1 className="text-primary text-2xl font-bold my-4">
-        Task Management Dashboard
-      </h1>
-      <table className="w-full bg-green-100 border border-gray-200 rounded shadow">
+      <h1 className="dashboard-title">Task Management Dashboard</h1>
+      <table className="dashboard-table">
         {/* Table Header */}
         <thead>
           <tr>
-            <th className="py-3 px-4 bg-primary text-white font-bold">ID</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">Title</th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">
-              Status
-            </th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">
-              Progress
-            </th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">
-              Comment
-            </th>
-            <th className="py-3 px-4 bg-primary text-white font-bold">
-              Time Created
-            </th>
-
-            <th className="py-3 px-4 bg-primary text-white font-bold">
-              Actions
-            </th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Progress</th>
+            <th>Comment</th>
+            <th>Time Created</th>
+            <th>Actions</th>
           </tr>
         </thead>
         {/* Table Body */}
@@ -310,40 +296,45 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           {taskList.map((task) => (
             <tr key={task.id}>
               {/* Individual Task Data */}
-              <td className="py-3 px-4 border-b">{task.id}</td>
-              <td className="py-3 px-4 border-b">{task.title}</td>
-              <td className="py-3 px-4 border-b">
+              <td>{task.id}</td>
+              <td>{task.title}</td>
+              <td>
                 <select
                   value={task.status}
-                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                  className="py-1 px-2 rounded border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+                  onChange={(e) =>
+                    handleChange(
+                      task.id,
+                      e.target.value,
+                      task.title,
+                      task.timeTracking.toString(),
+                      task.comment
+                    )
+                  }
                 >
                   <option value="Completed">Completed</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Pending">Pending</option>
                 </select>
               </td>
-              <td className="py-3 px-4 border-b">
-                <div className="w-full h-2 bg-gray-200 rounded">
+              <td>
+                <div className="progress-bar">
                   <div
-                    className={`h-full bg-primary rounded ${
+                    className={`progress ${
                       taskProgress[task.id] === 100 ? "bg-green-500" : ""
                     }`}
                     style={{ width: `${taskProgress[task.id]}%` }}
                   ></div>
                 </div>
               </td>
-
               <td className="py-3 px-4 border-b">
                 {task.comment !== "" ? (
                   <span>{task.comment}</span>
                 ) : (
-                  <span className="text-gray-500">No comment</span>
+                  <span className="no-comment">No comment</span>
                 )}
               </td>
-              <td className="py-3 px-4 border-b">{task.timeTracking}</td>
-
-              <td className="py-3 px-4 border-b">
+              <td>{task.timeTracking}</td>
+              <td>
                 <button
                   onClick={() => handleDeleteTask(task.id)}
                   className="text-red-500"
@@ -355,26 +346,6 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           ))}
         </tbody>
       </table>
-      {/* <div className="mt-4">
-        <button
-          onClick={assignTask}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Assign Task
-        </button>
-        <button
-          onClick={updateTask}
-          className="bg-green-500 text-white px-4 py-2 rounded ml-2"
-        >
-          Update Task
-        </button>
-        <button
-          onClick={checkDeadline}
-          className="bg-yellow-500 text-white px-4 py-2 rounded ml-2"
-        >
-          Check Deadline
-        </button>
-      </div>*/}
     </div>
   );
 };

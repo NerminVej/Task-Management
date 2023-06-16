@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = "http://localhost:8080/api";
 
 // Gets all the tasks of one user with his id.
 export const getTasksByUserId = (userId: number) => {
@@ -44,4 +44,21 @@ export const deleteTask = (userId: number, taskId: number) => {
   return axios.delete(url);
 };
 
-
+// Handles the PUT request to update task status
+export const updateTaskStatus = (
+  userId: number,
+  taskId: number,
+  status: string,
+  name: string,
+  time: string,
+  comment: string
+) => {
+  const url = `${API_BASE_URL}/tasks/user/${userId}/${taskId}`;
+  const data = {
+    status,
+    name,
+    time,
+    comment,
+  };
+  return axios.put(url, data);
+};
