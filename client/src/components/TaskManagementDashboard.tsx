@@ -11,7 +11,7 @@ interface Task {
   title: string;
   status: string;
   progress: number;
-  comments: string[];
+  comment: string;
   attachments: string[];
   timeTracking: number;
 }
@@ -33,7 +33,7 @@ interface TaskData {
   status: string;
   time: string;
   userId: number;
-  comments: string[]; // | null;
+  comment: string | null;
   attachments: string[] | null;
 }
 
@@ -87,7 +87,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
               id: taskData.id,
               title: taskData.name,
               status: taskData.status,
-              comments: taskData.comments,
+              comment: taskData.comment || "",
               attachments: taskData.attachments,
               timeTracking: taskData.time,
               // Responsible for handling that the progress bar gets changed when logging in.
@@ -139,7 +139,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       title: "New Task",
       status: "Pending",
       progress: 0,
-      comments: [],
+      comment: "",
       attachments: [],
       timeTracking: 0,
     };
@@ -224,6 +224,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                   )
                 );
               }, 5000);
+              setNotificationTimeout(timeoutId);
             }
 
             // Update the task status and progress
@@ -293,7 +294,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
               Progress
             </th>
             <th className="py-3 px-4 bg-primary text-white font-bold">
-              Comments
+              Comment
             </th>
             <th className="py-3 px-4 bg-primary text-white font-bold">
               Time Created
@@ -334,23 +335,18 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
               </td>
 
               <td className="py-3 px-4 border-b">
-                {task.comments && task.comments.length > 0 ? (
-                  <ul className="list-disc pl-4">
-                    {task.comments.map((comment, index) => (
-                      <li key={index}>{comment}</li>
-                    ))}
-                  </ul>
+                {task.comment !== "" ? (
+                  <span>{task.comment}</span>
                 ) : (
-                  <p>No comments available.</p>
+                  <span className="text-gray-500">No comment</span>
                 )}
               </td>
-
               <td className="py-3 px-4 border-b">{task.timeTracking}</td>
-              {/* Delete Button */}
+
               <td className="py-3 px-4 border-b">
                 <button
-                  className="text-red-500 hover:text-red-700"
                   onClick={() => handleDeleteTask(task.id)}
+                  className="text-red-500"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} />
                 </button>
@@ -359,6 +355,26 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           ))}
         </tbody>
       </table>
+      {/* <div className="mt-4">
+        <button
+          onClick={assignTask}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Assign Task
+        </button>
+        <button
+          onClick={updateTask}
+          className="bg-green-500 text-white px-4 py-2 rounded ml-2"
+        >
+          Update Task
+        </button>
+        <button
+          onClick={checkDeadline}
+          className="bg-yellow-500 text-white px-4 py-2 rounded ml-2"
+        >
+          Check Deadline
+        </button>
+      </div>*/}
     </div>
   );
 };
