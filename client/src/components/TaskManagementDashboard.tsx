@@ -45,7 +45,12 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   const [notificationTimeout, setNotificationTimeout] =
     useState<NodeJS.Timeout | null>(null);
   const [userId, setUserId] = useState<number>(1);
+  // To track the progress of each task
+  const [taskProgress, setTaskProgress] = useState<{
+    [taskId: number]: number;
+  }>({});
 
+  // Gets the userID when the page loads. We need it for our backend.
   useEffect(() => {
     // Fetch the user ID based on the email
     getUserIdByEmail(email)
@@ -68,6 +73,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       });
   }, [email]);
 
+  // Fetches all of our tasks that a user holds on the backend.
   useEffect(() => {
     if (userId) {
       // Fetch tasks for the user
@@ -84,13 +90,20 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
             timeTracking: taskData.time,
           }));
           setTaskList(updatedTaskList);
-          console.log(updatedTaskList);
+
+          // Update the task progress
+          const updatedTaskProgress: { [taskId: number]: number } = {};
+          updatedTaskList.forEach((task: Task) => {
+            updatedTaskProgress[task.id] = task.progress;
+          });
+          setTaskProgress(updatedTaskProgress);
         })
         .catch((error) => {
           console.error("Failed to get tasks:", error);
         });
     }
   }, [userId]);
+
   const addNotification = (message: string, type: string) => {
     const newNotification: Notification = {
       id: Date.now(),
@@ -152,7 +165,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         if (task.id === id) {
           let progress = task.progress;
           let notificationMessage = "";
-
+  
           if (task.status !== status) {
             if (status === "In Progress") {
               progress = 50;
@@ -164,12 +177,18 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
               progress = 0;
               notificationMessage = "Task pending.";
             }
-
+  
+            // Update the task progress in the state
+            setTaskProgress((prevProgress) => ({
+              ...prevProgress,
+              [id]: progress,
+            }));
+  
             // Show a notification if the status has changed
             if (notificationMessage !== "") {
               // Clear all existing notifications
               setNotifications([]);
-
+  
               // Add the new notification
               const newNotification = {
                 id: Date.now(),
@@ -181,7 +200,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                 ...prevNotifications,
                 newNotification,
               ]);
-
+  
               // Set a timeout to remove the notification after 5 seconds
               const timeoutId = setTimeout(() => {
                 setNotifications((prevNotifications) =>
@@ -191,6 +210,8 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                 );
               }, 5000);
             }
+  
+            // Update the task status and progress
             return { ...task, status, progress };
           }
         }
@@ -198,6 +219,8 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       })
     );
   };
+  
+  
 
   function handleDeleteTask(taskId: number): void {
     // Call the deleteTask function from the API file
@@ -209,7 +232,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         );
         // Show a notification for successful deletion
         addNotification("Task deleted.", "success");
-  
+
         // Set a timeout to remove the notification after 5 seconds
         const timeoutId = setTimeout(() => {
           setNotifications((prevNotifications) =>
@@ -218,7 +241,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
             )
           );
         }, 5000);
-  
+
         // Store the timeoutId in state to clear it later if needed
         setNotificationTimeout(timeoutId);
       })
@@ -228,7 +251,6 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         addNotification("Failed to delete task.", "error");
       });
   }
-  
 
   return (
     <div className="container mx-auto px-4">
@@ -291,12 +313,13 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                 <div className="w-full h-2 bg-gray-200 rounded">
                   <div
                     className={`h-full bg-primary rounded ${
-                      task.progress === 100 ? "bg-green-500" : ""
+                      taskProgress[task.id] === 100 ? "bg-green-500" : ""
                     }`}
-                    style={{ width: `${task.progress}%` }}
+                    style={{ width: `${taskProgress[task.id]}%` }}
                   ></div>
                 </div>
               </td>
+
               <td className="py-3 px-4 border-b">
                 {task.comments && task.comments.length > 0 ? (
                   <ul className="list-disc pl-4">
