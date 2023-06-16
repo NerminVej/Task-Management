@@ -125,27 +125,31 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     }
   };
 
-  const addNotification = (message: string, type: string) => {
+  const addNotification = (
+    message: string,
+    type: string,
+    taskTitle: string
+  ) => {
     const newNotification: Notification = {
       id: Date.now(),
       message,
       type,
       timestamp: new Date().toLocaleString(),
     };
-  
+
     setNotifications((prevNotifications) => {
       // Check if a notification with the same message already exists
       const existingNotification = prevNotifications.find(
         (notification) => notification.message === message
       );
-  
+
       if (existingNotification) {
         // If the notification already exists, return the previous notifications array
         return prevNotifications;
       } else {
         // If the notification is new, add it to the notifications array
         const updatedNotifications = [...prevNotifications, newNotification];
-  
+
         // Set a timeout to remove the notification after 5 seconds
         setTimeout(() => {
           setNotifications((prevNotifications) =>
@@ -154,7 +158,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
             )
           );
         }, 5000);
-  
+
         return updatedNotifications;
       }
     });
@@ -172,7 +176,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     };
 
     setTaskList((prevTasks) => [...prevTasks, assignedTask]);
-    addNotification("Task assigned to you.", "info");
+    addNotification("Task assigned to you.", "info", assignedTask.title);
   };
 
   const updateTask = () => {
@@ -188,17 +192,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         return task;
       })
     );
-    addNotification("Task updated.", "success");
-  };
-
-  const checkDeadline = () => {
-    const approachingTasks = taskList.filter(
-      (task) => task.progress < 100 && task.progress > 0
-    );
-
-    if (approachingTasks.length > 0) {
-      addNotification("Task deadline approaching!", "warning");
-    }
+    addNotification("Task updated.", "success", "Updated Task");
   };
 
   const handleStatusChange = (
@@ -229,8 +223,11 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
               }));
 
               // Add a notification when the status is changed
-              addNotification(`Task status changed to ${status}.`, "success");
-
+              addNotification(
+                `Task "${taskData.name}" status changed to ${status}.`,
+                "success",
+                taskData.name
+              );
               return updatedTask;
             })
             .then((updatedTask) => {
@@ -264,7 +261,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     handleStatusChange(id, status, taskData);
   };
 
-  function handleDeleteTask(taskId: number): void {
+  function handleDeleteTask(taskId: number, taskTitle: string): void {
     // Call the deleteTask function from the API file
     deleteTask(userId, taskId)
       .then((response) => {
@@ -273,8 +270,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           prevTasks.filter((task) => task.id !== taskId)
         );
         // Show a notification for successful deletion
-        addNotification("Task deleted.", "success");
-
+        addNotification(`Task "${taskTitle}" deleted.`, "success", taskTitle);
         // Set a timeout to remove the notification after 5 seconds
         const timeoutId = setTimeout(() => {
           setNotifications((prevNotifications) =>
@@ -290,7 +286,11 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       .catch((error) => {
         console.error("Failed to delete task:", error);
         // Show a notification for failed deletion
-        addNotification("Failed to delete task.", "error");
+        addNotification(
+          `Failed to delete task "${taskTitle}".`,
+          "error",
+          taskTitle
+        );
       });
   }
 
@@ -365,7 +365,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
               <td>{task.timeTracking}</td>
               <td>
                 <button
-                  onClick={() => handleDeleteTask(task.id)}
+                  onClick={() => handleDeleteTask(task.id, task.title)}
                   className="text-red-500"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} />
