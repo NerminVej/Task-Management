@@ -180,19 +180,17 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
               When do you want this task to be done?
             </label>
             <input
-  type="datetime-local"
-  id="taskTime"
-  name="taskTime"
-  className="input input-bordered w-full px-4 py-2"
-  placeholder="Enter time amount"
-  value={time}
-  onChange={handleTimeChange}
-  min={new Date().toLocaleString('sv-SE', { timeZone: 'Europe/Berlin' }).slice(0, 16)}
-/>
-
-
-
-
+              type="datetime-local"
+              id="taskTime"
+              name="taskTime"
+              className="input input-bordered w-full px-4 py-2"
+              placeholder="Enter time amount"
+              value={time}
+              onChange={handleTimeChange}
+              min={new Date()
+                .toLocaleString("sv-SE", { timeZone: "Europe/Berlin" })
+                .slice(0, 16)}
+            />
           </div>
 
           <div className="flex justify-end">
@@ -202,6 +200,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
             >
               Create Task
             </button>
+            
           </div>
         </form>
       </div>

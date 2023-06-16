@@ -18,7 +18,6 @@ const LoginPage: React.FC = () => {
   const [showTaskCreationPage, setShowTaskCreationPage] = useState(false);
   const [showRegistrationPage, setShowRegistrationPage] = useState(false);
 
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLoginForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -53,6 +52,11 @@ const LoginPage: React.FC = () => {
 
   const handleRegistrationSuccess = () => {
     setShowRegistrationPage(false); // Hide the RegistrationPage
+  };
+
+  const handleLogout = () => {
+    setLoggedInEmail(null); // Clear the logged-in email
+    setShowTaskCreationPage(false); // Hide the TaskCreationPage
   };
 
   return (
@@ -116,7 +120,7 @@ const LoginPage: React.FC = () => {
                 type="button"
                 onClick={handleSignUpClick}
                 className="bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
-                >
+              >
                 Sign Up Instead
               </button>
             </div>
@@ -124,18 +128,25 @@ const LoginPage: React.FC = () => {
         </form>
       )}
 
-      {showRegistrationPage && (
-        <RegistrationPage
-          
-        />
-      )}
+      {showRegistrationPage && <RegistrationPage />}
 
       {loggedInEmail && showTaskCreationPage && (
-        <div>
-          <TaskManagementDashboard email={loggedInEmail as string} />
-          <TaskCreationPage email={loggedInEmail as string} />
-        </div>
-      )}
+  <div>
+    <TaskManagementDashboard email={loggedInEmail as string} />
+    <div className="flex flex-col items-center mt-4">
+      <TaskCreationPage email={loggedInEmail as string} />
+
+      <button
+        type="button"
+        className="btn bg-red-500 text-white font-medium px-4 py-2 mt-4 rounded-md shadow-md hover:bg-red-600"
+        onClick={handleLogout}
+      >
+        Sign Out
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

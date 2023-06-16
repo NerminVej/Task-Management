@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 import LoginPage from "./LoginPage";
-import { signup } from "../config/api";
+import { signup, login } from "../config/api";
 import FormField from "./FormField";
 
 const RegistrationPage: React.FC = () => {
@@ -21,6 +21,7 @@ const RegistrationPage: React.FC = () => {
       signup(name, email, password)
         .then((response) => {
           console.log("Signup successful");
+          handleLogin();
         })
         .catch((error) => {
           console.error("Signup failed:", error);
@@ -28,6 +29,17 @@ const RegistrationPage: React.FC = () => {
     } else {
       console.log("Invalid Credentials");
     }
+  };
+
+  const handleLogin = () => {
+    login(email, password)
+      .then(() => {
+        console.log("Login successful");
+        window.location.reload(); // Refresh the page to log in the user
+      })
+      .catch((error) => {
+        console.error("Login failed:", error);
+      });
   };
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
