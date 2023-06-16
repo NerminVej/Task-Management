@@ -3,6 +3,7 @@ import CustomNotification from "./CustomNotification";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import TaskRow from "./TaskRow";
 import {
   getTasksByUserId,
   getUserIdByEmail,
@@ -11,6 +12,7 @@ import {
 } from "../config/api";
 import "../styles/tailwind.css";
 import "../styles/dashboardStyle.css";
+import TableHeader from "./TableHeader";
 
 interface Task {
   id: number;
@@ -309,69 +311,17 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       <h1 className="dashboard-title">Task Management Dashboard</h1>
       <table className="dashboard-table">
         {/* Table Header */}
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Progress</th>
-            <th>Comment</th>
-            <th>Time Created</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+        <TableHeader></TableHeader>
         {/* Table Body */}
         <tbody>
-          {taskList.map((task) => (
-            <tr key={task.id}>
-              {/* Individual Task Data */}
-              <td>{task.id}</td>
-              <td>{task.title}</td>
-              <td>
-                <select
-                  value={task.status}
-                  onChange={(e) =>
-                    handleChange(
-                      task.id,
-                      e.target.value,
-                      task.title,
-                      task.timeTracking.toString(),
-                      task.comment
-                    )
-                  }
-                >
-                  <option value="Completed">Completed</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Pending">Pending</option>
-                </select>
-              </td>
-              <td>
-                <div className="progress-bar">
-                  <div
-                    className={`progress ${
-                      taskProgress[task.id] === 100 ? "bg-green-500" : ""
-                    }`}
-                    style={{ width: `${taskProgress[task.id]}%` }}
-                  ></div>
-                </div>
-              </td>
-              <td className="py-3 px-4 border-b">
-                {task.comment !== "" ? (
-                  <span>{task.comment}</span>
-                ) : (
-                  <span className="no-comment">No comment</span>
-                )}
-              </td>
-              <td>{task.timeTracking}</td>
-              <td>
-                <button
-                  onClick={() => handleDeleteTask(task.id, task.title)}
-                  className="text-red-500"
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                </button>
-              </td>
-            </tr>
+        {taskList.map((task) => (
+            <TaskRow
+              key={task.id}
+              task={task}
+              taskProgress={taskProgress}
+              onChange={handleChange}
+              onDelete={handleDeleteTask}
+            />
           ))}
         </tbody>
       </table>
