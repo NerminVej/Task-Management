@@ -6,6 +6,13 @@ interface NotificationProps {
   timestamp: string;
 }
 
+/**
+ * Renders a custom notification based on the provided props.
+ *
+ * @param message - The message of the notification.
+ * @param type - The type of the notification.
+ * @param timestamp - The timestamp of the notification.
+ */
 const CustomNotification: React.FC<NotificationProps> = ({
   message,
   type,
@@ -13,6 +20,7 @@ const CustomNotification: React.FC<NotificationProps> = ({
 }) => {
   let notificationClass = "";
 
+  // Set the CSS class based on the notification type
   if (type === "success") {
     notificationClass = "alert alert-info";
   }
@@ -21,6 +29,7 @@ const CustomNotification: React.FC<NotificationProps> = ({
     <div className={notificationClass + " mb-4"}>
       {type === "success" && (
         <>
+          {/* Render a success icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -35,6 +44,7 @@ const CustomNotification: React.FC<NotificationProps> = ({
             />
           </svg>
           <div className="flex flex-col items-center">
+            {/* Render the message and timestamp */}
             <span>{message}</span>
             <span>{timestamp}</span>
           </div>

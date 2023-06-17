@@ -17,6 +17,7 @@ interface FormValues {
 }
 
 const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
+  // State variables
   const [formValues, setFormValues] = useState<FormValues>({
     taskName: "",
     status: "Pending",
@@ -28,6 +29,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
+  // Fetch user ID and check login status when the component mounts or email changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,6 +48,8 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
 
     fetchData();
   }, [email]);
+
+  // Login and logout handlers
   const handleLogin = (token: string) => {
     localStorage.setItem("sessionToken", token);
     setIsLoggedIn(true);
@@ -56,6 +60,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
     setIsLoggedIn(false);
   };
 
+  // Handle input changes
   const handleChange = (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -68,6 +73,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
     }));
   };
 
+  // Handle form submission
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrors([]);

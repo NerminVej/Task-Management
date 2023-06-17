@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type Notification = {
   id: number;
@@ -17,6 +17,19 @@ type AssignedTask = {
   timeTracking: number;
 };
 
+/**
+ * Adds a new notification to the array of notifications.
+ * If a notification with the same message already exists, it does not add a duplicate notification.
+ * The notification is automatically removed after 5 seconds.
+ *
+ * @param message - The message of the notification.
+ * @param type - The type of the notification.
+ * @param taskTitle - The title of the task associated with the notification.
+ * @param assignedTask - The assigned task object.
+ * @param setNotifications - The state setter function for the notifications array.
+ * @param prevNotifications - The previous notifications array.
+ * @returns The updated notifications array.
+ */
 export const addNotification = (
   message: string,
   type: string,

@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const RegistrationPage: React.FC = () => {
+  // State variables
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -14,16 +15,19 @@ const RegistrationPage: React.FC = () => {
   const [passwordStrength, setPasswordStrength] = useState<string>("");
   const [showLoginPage, setShowLoginPage] = useState<boolean>(false);
 
+  // Event handlers
   const handleSignup = () => {
+    // Perform validation checks for email and password strength
     if (
       isEmailValid(email) &&
       (checkPasswordStrength(password) === "good" ||
         checkPasswordStrength(password) === "strong")
     ) {
+      // Call the signup function with the provided credentials
       signup(name, email, password)
         .then(() => {
           toast.success("Signup successful"); // Display success toast
-          handleLogin();
+          handleLogin(); // Automatically log in the user after signup
         })
         .catch((error) => {
           toast.error("Signup failed. Please try again."); // Display error toast
@@ -35,6 +39,7 @@ const RegistrationPage: React.FC = () => {
   };
 
   const handleLogin = () => {
+    // Perform login using the provided email and password
     login(email, password)
       .then(() => {
         toast.success("Login successful"); // Display success toast
@@ -48,7 +53,7 @@ const RegistrationPage: React.FC = () => {
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSignup();
+    handleSignup(); // Call the handleSignup function when the form is submitted
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,11 +76,11 @@ const RegistrationPage: React.FC = () => {
   };
 
   const handleLoginClick = () => {
-    setShowLoginPage(true);
+    setShowLoginPage(true); // Show the LoginPage component
   };
 
   if (showLoginPage) {
-    return <LoginPage />;
+    return <LoginPage />; // Redirect to the LoginPage component if showLoginPage is true
   }
 
   const updatePasswordStrengthIndicator = (strength: string) => {

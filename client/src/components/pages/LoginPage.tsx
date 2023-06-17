@@ -13,6 +13,7 @@ interface LoginForm {
 }
 
 const LoginPage: React.FC = () => {
+  // State variables
   const [loginForm, setLoginForm] = useState<LoginForm>({
     email: "",
     password: "",
@@ -21,6 +22,7 @@ const LoginPage: React.FC = () => {
   const [showTaskCreationPage, setShowTaskCreationPage] = useState(false);
   const [showRegistrationPage, setShowRegistrationPage] = useState(false);
 
+  // Event handlers
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLoginForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -45,10 +47,7 @@ const LoginPage: React.FC = () => {
         console.log("Login failed");
       }
     } catch (error) {
-      // This shows the error to our console which is very helpful for debugging purposes.
-      //console.error("Error occurred during login:", error);
       toast.error("Error occurred during login"); // Display error toast
-      // Handle the error appropriately (e.g., display an error message)
     }
   };
 
@@ -67,6 +66,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="flex flex-container">
+      {/* Render the login form if not logged in and not on the registration page */}
       {!loggedInEmail && !showRegistrationPage && (
         <form
           onSubmit={handleFormSubmit}
@@ -125,8 +125,10 @@ const LoginPage: React.FC = () => {
         </form>
       )}
 
+      {/* Render the registration page if showRegistrationPage is true */}
       {showRegistrationPage && <RegistrationPage />}
 
+      {/* Render the dashboard and task creation page if logged in */}
       {loggedInEmail && showTaskCreationPage && (
         <div>
           <TaskManagementDashboard email={loggedInEmail as string} />

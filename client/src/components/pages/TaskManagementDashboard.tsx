@@ -22,6 +22,7 @@ import "../../styles/tailwind.css";
 import "../../styles/dashboardStyle.css";
 import TableHeader from "../tasks/TableHeader";
 
+// Interface for a Task object
 interface Task {
   id: number;
   title: string;
@@ -32,6 +33,7 @@ interface Task {
   timeTracking: number;
 }
 
+// Interface for a Notification object
 interface Notification {
   id: number;
   message: string;
@@ -39,10 +41,12 @@ interface Notification {
   timestamp: string;
 }
 
+// Props interface for the TaskManagementDashboard component
 interface TaskCreationPageProps {
   email: string;
 }
 
+// Interface for the data received from the API for a task
 interface TaskData {
   id: number;
   name: string;
@@ -56,15 +60,16 @@ interface TaskData {
 const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   email,
 }) => {
-  const [taskList, setTaskList] = useState<Task[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [taskList, setTaskList] = useState<Task[]>([]); // State to store the list of tasks
+  const [notifications, setNotifications] = useState<Notification[]>([]); // State to store the notifications
   const [notificationTimeout, setNotificationTimeout] =
-    useState<NodeJS.Timeout | null>(null);
-  const [userId, setUserId] = useState<number>(1);
-  // To track the progress of each task
+    useState<NodeJS.Timeout | null>(null); // State to store the timeout for removing notifications
+  const [userId, setUserId] = useState<number>(1); // State to store the user ID
   const [taskProgress, setTaskProgress] = useState<{
     [taskId: number]: number;
-  }>({});
+  }>(
+    {} // State to track the progress of each task
+  );
 
   useEffect(() => {
     // Fetch the user ID based on the email
@@ -177,7 +182,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           const progress = calculateProgress(status);
 
           updateTaskStatusAndProgress(task, id, status, taskData, progress);
-          
+
           updateNotificationAndToast(task, taskData, status);
 
           return { ...task, status, progress };
@@ -226,230 +231,17 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     status: string
   ) => {
     const toastMessage = `Task "${taskData.name}" status changed to ${status}.`;
-    
-    if (!notifications.some((notification) => notification.message === toastMessage)) {
+
+    if (
+      !notifications.some(
+        (notification) => notification.message === toastMessage
+      )
+    ) {
       addNotification(toastMessage, "success", taskData.name);
       // If I want to add a toast message instead of my own Notification component.
       //toast.success(toastMessage);
     }
   };
-  
-  
-  /*
-  const handleStatusChange = (
-    id: number,
-    status: string,
-    taskData: { name: string; time: string; comment: string }
-  ) => {
-    setTaskList((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === id && task.status !== status) {
-          const progress = calculateProgress(status);
-  
-          // Send PUT request to update task status
-          updateTaskStatus(
-            userId,
-            task.id,
-            status,
-            taskData.name,
-            taskData.time,
-            taskData.comment
-          )
-            .then(() => {
-              // Update the task status and progress in the state
-              const updatedTask = { ...task, status, progress };
-              setTaskProgress((prevProgress) => ({
-                ...prevProgress,
-                [id]: progress,
-              }));
-  
-              // Check if a notification for the same task and status already exists
-              const existingNotification = notifications.find(
-                (notification) =>
-                  notification.message ===
-                  `Task "${taskData.name}" status changed to ${status}.`
-              );
-  
-              if (!existingNotification) {
-                // Add a notification when the status is changed
-                addNotification(
-                  `Task "${taskData.name}" status changed to ${status}.`,
-                  "success",
-                  taskData.name
-                );
-  
-                // Display toast notification
-                toast.success(
-                  `Task "${taskData.name}" status changed to ${status}.`
-                );
-              }
-  
-              return updatedTask;
-            })
-            .then((updatedTask) => {
-              // Update the task status in the state
-              setTaskList((prevTasks) =>
-                prevTasks.map((task) => (task.id === id ? updatedTask : task))
-              );
-            })
-            .catch((error) => {
-              console.error("Failed to update task status:", error);
-              return task;
-            });
-        }
-        return task;
-      })
-    );
-  };*/
-
-  /*
-  // Gets the userID when the page loads. We need it for our backend.
-  useEffect(() => {
-    // Fetch the user ID based on the email
-    getUserIdByEmail(email)
-      .then((response) => {
-        const responseData = response.data;
-        const userId = responseData;
-
-        if (userId) {
-          setUserId(userId);
-          console.log("The user id is: " + userId);
-        } else {
-          console.error(
-            "Failed to get user ID. Invalid response:",
-            responseData
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to get user ID:", error);
-      });
-  }, [email]);
-
-  // Fetches all of our tasks that a user holds on the backend.
-  useEffect(() => {
-    if (userId) {
-      // Fetch tasks for the user
-      getTasksByUserId(userId)
-        .then((response) => {
-          const tasksData = response.data;
-          // Update task list by including the name property
-          const updatedTaskList = tasksData.map((taskData: TaskData) => {
-            const progress = calculateProgress(taskData.status);
-            return {
-              id: taskData.id,
-              title: taskData.name,
-              status: taskData.status,
-              comment: taskData.comment || "",
-              attachments: taskData.attachments,
-              timeTracking: taskData.time,
-              // Responsible for handling that the progress bar gets changed when logging in.
-              progress: progress,
-            };
-          });
-          setTaskList(updatedTaskList);
-
-          // Update the task progress
-          const updatedTaskProgress: { [taskId: number]: number } = {};
-          updatedTaskList.forEach((task: Task) => {
-            updatedTaskProgress[task.id] = task.progress;
-          });
-          setTaskProgress(updatedTaskProgress);
-        })
-        .catch((error) => {
-          console.error("Failed to get tasks:", error);
-        });
-    }
-  }, [userId]);
-  */
-
-  /*
-  const assignTask = () => {
-    const assignedTask = {
-      id: Date.now(),
-      title: "New Task",
-      status: "Pending",
-      progress: 0,
-      comment: "",
-      attachments: [],
-      timeTracking: 0,
-    };
-
-    setTaskList((prevTasks) => [...prevTasks, assignedTask]);
-    addNotification("Task assigned to you.", "info", assignedTask.title);
-  };
-  */
-
-  /*
-
-  const updateTask = () => {
-    setTaskList((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === 1) {
-          return {
-            ...task,
-            title: "Updated Task",
-            progress: 75,
-          };
-        }
-        return task;
-      })
-    );
-    addNotification("Task updated.", "success", "Updated Task");
-  };
-
-  */
-
-  // Assuming you have access to the `taskData` object
-  /*
-  const handleChange = (
-    id: number,
-    status: string,
-    name: string,
-    time: string,
-    comment: string
-  ) => {
-    const taskData = {
-      name: name,
-      time: time,
-      comment: comment,
-    };
-    handleStatusChange(id, status, taskData);
-  };*/
-
-  /*
-  function handleDeleteTask(taskId: number, taskTitle: string): void {
-    // Call the deleteTask function from the API file
-    deleteTask(userId, taskId)
-      .then((response) => {
-        // Remove the task from the task list
-        setTaskList((prevTasks) =>
-          prevTasks.filter((task) => task.id !== taskId)
-        );
-        // Show a notification for successful deletion
-        addNotification(`Task "${taskTitle}" deleted.`, "success", taskTitle);
-        // Set a timeout to remove the notification after 5 seconds
-        const timeoutId = setTimeout(() => {
-          setNotifications((prevNotifications) =>
-            prevNotifications.filter(
-              (notification) => notification.message !== "Task deleted."
-            )
-          );
-        }, 5000);
-
-        // Store the timeoutId in state to clear it later if needed
-        setNotificationTimeout(timeoutId);
-      })
-      .catch((error) => {
-        console.error("Failed to delete task:", error);
-        // Show a notification for failed deletion
-        addNotification(
-          `Failed to delete task "${taskTitle}".`,
-          "error",
-          taskTitle
-        );
-      });
-  }*/
 
   return (
     <div className="dashboard">

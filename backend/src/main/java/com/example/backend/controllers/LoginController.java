@@ -32,15 +32,11 @@ public class LoginController {
     }
     @PostMapping("/")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("Does this get triggered");
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
-        System.out.println(email);
-        System.out.println(password);
         try {
             boolean isAuthenticated = authenticationService.authenticate(email, password);
 
-            System.out.println(authenticationService.authenticate(email, password));
             if (isAuthenticated) {
                 // Authentication successful
                 User user = getUserByEmail(email);
