@@ -4,6 +4,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { calculateProgress } from "../config/taskUtils";
+import { handleDeleteTask, handleChange, updateTask } from "./helper/ChangeFunctionHelper";
+
 import TaskRow from "./TaskRow";
 import {
   getTasksByUserId,
@@ -118,8 +120,6 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     }
   }, [userId]);
 
-
-
   const addNotification = (
     message: string,
     type: string,
@@ -190,6 +190,8 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     addNotification("Task updated.", "success", "Updated Task");
   };
 
+  
+
   const handleStatusChange = (
     id: number,
     status: string,
@@ -240,7 +242,10 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       })
     );
   };
+
+
   // Assuming you have access to the `taskData` object
+  /*
   const handleChange = (
     id: number,
     status: string,
@@ -254,8 +259,9 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       comment: comment,
     };
     handleStatusChange(id, status, taskData);
-  };
+  };*/
 
+  /*
   function handleDeleteTask(taskId: number, taskTitle: string): void {
     // Call the deleteTask function from the API file
     deleteTask(userId, taskId)
@@ -287,7 +293,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           taskTitle
         );
       });
-  }
+  }*/
 
   return (
     <div className="dashboard">
@@ -307,13 +313,32 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         <TableHeader></TableHeader>
         {/* Table Body */}
         <tbody>
-        {taskList.map((task) => (
+          {taskList.map((task) => (
             <TaskRow
               key={task.id}
               task={task}
               taskProgress={taskProgress}
-              onChange={handleChange}
-              onDelete={handleDeleteTask}
+              onChange={(id, status, name, time, comment) =>
+                handleChange(
+                  id,
+                  status,
+                  name,
+                  time,
+                  comment,
+                  handleStatusChange
+                )
+              }
+              onDelete={() =>
+                handleDeleteTask(
+                  userId,
+                  task.id,
+                  task.title,
+                  setTaskList,
+                  addNotification,
+                  setNotifications,
+                  setNotificationTimeout
+                )
+              }
             />
           ))}
         </tbody>
