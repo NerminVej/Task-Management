@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CustomNotification from "./CustomNotification";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+
 import { calculateProgress } from "../config/taskUtils";
 import {
   handleDeleteTask,
