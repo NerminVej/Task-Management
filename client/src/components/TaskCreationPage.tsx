@@ -26,6 +26,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,8 +34,10 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
         const response = await getUserIdByEmail(email);
         const id = response.data;
         setUserId(id);
+        setFetchError(null); // Reset the fetch error if it was successful
       } catch (error) {
         console.error("Failed to fetch user ID:", error);
+        setFetchError("Failed to fetch user ID. Please try again."); // Set the error message
       }
 
       const sessionToken = localStorage.getItem("sessionToken");
@@ -43,7 +46,6 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
 
     fetchData();
   }, [email]);
-
   const handleLogin = (token: string) => {
     localStorage.setItem("sessionToken", token);
     setIsLoggedIn(true);
@@ -106,7 +108,8 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
     <div className="flex flex-container">
       <div className="form-container">
         <h2 className="form-title">Create Task</h2>
-
+        {/* Display the fetch error message */}
+        {fetchError && <div className="error-message">{fetchError}</div>}{" "}
         <form className="space-y-6" onSubmit={handleFormSubmit}>
           {errors.length > 0 && <ValidationErrors errors={errors} />}
 
@@ -175,7 +178,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
           </div>
 
           <div className="flex justify-end">
-            <button type="submit" className="form-button form-button:hover">
+            <button type="submit" className="form-button">
               Create Task
             </button>
           </div>
