@@ -3,6 +3,7 @@ import CustomNotification from "./CustomNotification";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { calculateProgress } from "../config/taskUtils";
 import TaskRow from "./TaskRow";
 import {
   getTasksByUserId,
@@ -117,15 +118,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     }
   }, [userId]);
 
-  const calculateProgress = (status: string): number => {
-    if (status === "Completed") {
-      return 100;
-    } else if (status === "In Progress") {
-      return 50;
-    } else {
-      return 0;
-    }
-  };
+
 
   const addNotification = (
     message: string,
