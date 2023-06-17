@@ -178,7 +178,7 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
           </div>
 
           <div className="flex justify-end">
-            <button type="submit" className="form-button">
+            <button type="submit" className="bg-primary form-button">
               Create Task
             </button>
           </div>

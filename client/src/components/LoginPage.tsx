@@ -7,7 +7,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/taskCreationStyling.css";
 
-
 interface LoginForm {
   email: string;
   password: string;
@@ -29,7 +28,6 @@ const LoginPage: React.FC = () => {
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", loginForm);
 
     try {
       // Perform login request using the login function
@@ -47,7 +45,8 @@ const LoginPage: React.FC = () => {
         console.log("Login failed");
       }
     } catch (error) {
-      console.error("Error occurred during login:", error);
+      // This shows the error to our console which is very helpful for debugging purposes.
+      //console.error("Error occurred during login:", error);
       toast.error("Error occurred during login"); // Display error toast
       // Handle the error appropriately (e.g., display an error message)
     }
@@ -67,22 +66,19 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-container">
       {!loggedInEmail && !showRegistrationPage && (
         <form
           onSubmit={handleFormSubmit}
           className="p-4 bg-white rounded-md shadow-md"
         >
           <div className="space-y-4">
-            <h1 className="text-center text-gray-800">
+            <h1 className="form-title">
               Login for the Task Management Application
             </h1>
 
             <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-primary text-left"
-              >
+              <label htmlFor="email" className="form-label">
                 Email
               </label>
               <input
@@ -91,15 +87,12 @@ const LoginPage: React.FC = () => {
                 name="email"
                 value={loginForm.email}
                 onChange={handleInputChange}
-                className="input input-bordered w-full px-4 py-2"
+                className="form-input"
               />
             </div>
 
             <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-primary text-left"
-              >
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <input
@@ -108,15 +101,12 @@ const LoginPage: React.FC = () => {
                 name="password"
                 value={loginForm.password}
                 onChange={handleInputChange}
-                className="input input-bordered w-full px-4 py-2"
+                className="form-input"
               />
             </div>
 
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-secondary text-white font-medium px-8 py-2 rounded-md shadow-md hover:bg-opacity-90 transition-colors duration-300 ease-in-out"
-              >
+              <button type="submit" className="bg-secondary form-button">
                 Login
               </button>
             </div>
@@ -126,7 +116,7 @@ const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSignUpClick}
-                className="bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-opacity-90"
+                className="form-button bg-primary"
               >
                 Sign Up Instead
               </button>

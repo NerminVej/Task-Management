@@ -18,7 +18,7 @@ const CustomNotification: React.FC<NotificationProps> = ({
   }
 
   return (
-    <div className={notificationClass}>
+    <div className={notificationClass + " mb-4"}>
       {type === "success" && (
         <>
           <svg

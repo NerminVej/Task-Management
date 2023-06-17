@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CustomNotification from "./CustomNotification";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { calculateProgress } from "../config/taskUtils";
 import {
@@ -70,10 +72,9 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       .then((response) => {
         const responseData = response.data;
         const userId = responseData;
-  
+
         if (userId) {
           setUserId(userId);
-          console.log("The user id is: " + userId);
         } else {
           console.error(
             "Failed to get user ID. Invalid response:",
@@ -84,7 +85,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       .catch((error) => {
         console.error("Failed to get user ID:", error);
       });
-  
+
     if (userId) {
       // Fetch tasks for the user
       getTasksByUserId(userId)
@@ -104,7 +105,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
             };
           });
           setTaskList(updatedTaskList);
-  
+
           // Update the task progress
           const updatedTaskProgress: { [taskId: number]: number } = {};
           updatedTaskList.forEach((task: Task) => {
@@ -117,8 +118,6 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         });
     }
   }, [email, userId]);
-  
- 
 
   const addNotification = (
     message: string,
@@ -177,6 +176,76 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         if (task.id === id && task.status !== status) {
           const progress = calculateProgress(status);
 
+          updateTaskStatusAndProgress(task, id, status, taskData, progress);
+          
+          updateNotificationAndToast(task, taskData, status);
+
+          return { ...task, status, progress };
+        }
+        return task;
+      })
+    );
+  };
+
+  const updateTaskStatusAndProgress = (
+    task: Task,
+    id: number,
+    status: string,
+    taskData: { name: string; time: string; comment: string },
+    progress: number
+  ) => {
+    updateTaskStatus(
+      userId,
+      id,
+      status,
+      taskData.name,
+      taskData.time,
+      taskData.comment
+    )
+      .then(() => {
+        setTaskProgress((prevProgress) => ({
+          ...prevProgress,
+          [id]: progress,
+        }));
+      })
+      .then(() => {
+        setTaskList((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === id ? { ...task, status, progress } : task
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to update task status:", error);
+      });
+  };
+
+  const updateNotificationAndToast = (
+    task: Task,
+    taskData: { name: string; time: string; comment: string },
+    status: string
+  ) => {
+    const toastMessage = `Task "${taskData.name}" status changed to ${status}.`;
+    
+    if (!notifications.some((notification) => notification.message === toastMessage)) {
+      addNotification(toastMessage, "success", taskData.name);
+      // If I want to add a toast message instead of my own Notification component.
+      //toast.success(toastMessage);
+    }
+  };
+  
+  
+  /*
+  const handleStatusChange = (
+    id: number,
+    status: string,
+    taskData: { name: string; time: string; comment: string }
+  ) => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === id && task.status !== status) {
+          const progress = calculateProgress(status);
+  
           // Send PUT request to update task status
           updateTaskStatus(
             userId,
@@ -193,13 +262,28 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
                 ...prevProgress,
                 [id]: progress,
               }));
-
-              // Add a notification when the status is changed
-              addNotification(
-                `Task "${taskData.name}" status changed to ${status}.`,
-                "success",
-                taskData.name
+  
+              // Check if a notification for the same task and status already exists
+              const existingNotification = notifications.find(
+                (notification) =>
+                  notification.message ===
+                  `Task "${taskData.name}" status changed to ${status}.`
               );
+  
+              if (!existingNotification) {
+                // Add a notification when the status is changed
+                addNotification(
+                  `Task "${taskData.name}" status changed to ${status}.`,
+                  "success",
+                  taskData.name
+                );
+  
+                // Display toast notification
+                toast.success(
+                  `Task "${taskData.name}" status changed to ${status}.`
+                );
+              }
+  
               return updatedTask;
             })
             .then((updatedTask) => {
@@ -216,9 +300,9 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         return task;
       })
     );
-  };
+  };*/
 
-   /*
+  /*
   // Gets the userID when the page loads. We need it for our backend.
   useEffect(() => {
     // Fetch the user ID based on the email
@@ -279,7 +363,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   }, [userId]);
   */
 
-    /*
+  /*
   const assignTask = () => {
     const assignedTask = {
       id: Date.now(),
