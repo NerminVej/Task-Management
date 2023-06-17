@@ -4,7 +4,12 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { calculateProgress } from "../config/taskUtils";
-import { handleDeleteTask, handleChange, updateTask } from "./helper/ChangeFunctionHelper";
+import {
+  handleDeleteTask,
+  handleChange,
+  updateTask,
+  assignTask,
+} from "./helper/ChangeFunctionHelper";
 
 import TaskRow from "./TaskRow";
 import {
@@ -61,6 +66,61 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     [taskId: number]: number;
   }>({});
 
+  useEffect(() => {
+    // Fetch the user ID based on the email
+    getUserIdByEmail(email)
+      .then((response) => {
+        const responseData = response.data;
+        const userId = responseData;
+  
+        if (userId) {
+          setUserId(userId);
+          console.log("The user id is: " + userId);
+        } else {
+          console.error(
+            "Failed to get user ID. Invalid response:",
+            responseData
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get user ID:", error);
+      });
+  
+    if (userId) {
+      // Fetch tasks for the user
+      getTasksByUserId(userId)
+        .then((response) => {
+          const tasksData = response.data;
+          // Update task list by including the name property
+          const updatedTaskList = tasksData.map((taskData: TaskData) => {
+            const progress = calculateProgress(taskData.status);
+            return {
+              id: taskData.id,
+              title: taskData.name,
+              status: taskData.status,
+              comment: taskData.comment || "",
+              attachments: taskData.attachments,
+              timeTracking: taskData.time,
+              progress: progress,
+            };
+          });
+          setTaskList(updatedTaskList);
+  
+          // Update the task progress
+          const updatedTaskProgress: { [taskId: number]: number } = {};
+          updatedTaskList.forEach((task: Task) => {
+            updatedTaskProgress[task.id] = task.progress;
+          });
+          setTaskProgress(updatedTaskProgress);
+        })
+        .catch((error) => {
+          console.error("Failed to get tasks:", error);
+        });
+    }
+  }, [email, userId]);
+  
+  /*
   // Gets the userID when the page loads. We need it for our backend.
   useEffect(() => {
     // Fetch the user ID based on the email
@@ -119,6 +179,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
         });
     }
   }, [userId]);
+  */
 
   const addNotification = (
     message: string,
@@ -159,38 +220,13 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     });
   };
 
-  const assignTask = () => {
-    const assignedTask = {
-      id: Date.now(),
-      title: "New Task",
-      status: "Pending",
-      progress: 0,
-      comment: "",
-      attachments: [],
-      timeTracking: 0,
-    };
-
-    setTaskList((prevTasks) => [...prevTasks, assignedTask]);
-    addNotification("Task assigned to you.", "info", assignedTask.title);
+  const handleAssignTask = () => {
+    assignTask(setTaskList, addNotification);
   };
 
-  const updateTask = () => {
-    setTaskList((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === 1) {
-          return {
-            ...task,
-            title: "Updated Task",
-            progress: 75,
-          };
-        }
-        return task;
-      })
-    );
-    addNotification("Task updated.", "success", "Updated Task");
+  const handleUpdateTask = () => {
+    updateTask(setTaskList, addNotification);
   };
-
-  
 
   const handleStatusChange = (
     id: number,
@@ -243,6 +279,42 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     );
   };
 
+    /*
+  const assignTask = () => {
+    const assignedTask = {
+      id: Date.now(),
+      title: "New Task",
+      status: "Pending",
+      progress: 0,
+      comment: "",
+      attachments: [],
+      timeTracking: 0,
+    };
+
+    setTaskList((prevTasks) => [...prevTasks, assignedTask]);
+    addNotification("Task assigned to you.", "info", assignedTask.title);
+  };
+  */
+
+  /*
+
+  const updateTask = () => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === 1) {
+          return {
+            ...task,
+            title: "Updated Task",
+            progress: 75,
+          };
+        }
+        return task;
+      })
+    );
+    addNotification("Task updated.", "success", "Updated Task");
+  };
+
+  */
 
   // Assuming you have access to the `taskData` object
   /*
