@@ -21,9 +21,8 @@ import java.util.Optional;
 public class TaskController {
 
 
+    // Autowire the TaskService and UserService dependencies
     private final TaskService taskService;
-
-
     private final UserService userService;
 
     public TaskController(TaskService taskService, UserService userService) {
@@ -31,15 +30,18 @@ public class TaskController {
         this.userService = userService;
     }
 
-    // With this we are able to get all the tasks
+    // This method handles the HTTP GET request to retrieve all tasks
     @GetMapping("/")
     public ResponseEntity<List<Task>> getAllTasks() {
+        // Call the TaskService to get all tasks
         List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
+    // This method handles the HTTP GET request to retrieve a task by its ID
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        // Call the TaskService to get the task by its ID
         Optional<Task> task = taskService.getTaskById(id);
         if (task.isPresent()) {
             return ResponseEntity.ok(task.get());
@@ -48,40 +50,31 @@ public class TaskController {
         }
     }
 
-
-    // http://localhost:8080/api/tasks/user/1 as an example. Gets me all the tasks for the user with the id 1.
-    // The endpoint that lets us get all the tasks of one specific user.
+    // This method handles the HTTP GET request to retrieve tasks for a specific user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Long userId) {
+        // Call the TaskService to get tasks by user ID
         List<Task> tasks = taskService.getTasksByUserId(userId);
         return ResponseEntity.ok(tasks);
     }
 
-
-
+    // This method handles the HTTP POST request to create a new task
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@Valid @RequestBody Task task, @RequestParam("user_id") Long userId) {
+        // Call the TaskService to create a new task
         Task createdTask = taskService.createTask(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-
-
     }
 
-
-
-
-
-
-
-    // http://localhost:8080/api/tasks/user/1/4 This updates the task with the id of 4 of the user with the id 1.
+    // This method handles the HTTP PUT request to update a task for a specific user
     @PutMapping("/user/{userId}/{taskId}")
-    public ResponseEntity<Task> updateTaskForUser(@PathVariable Long userId, @PathVariable Long taskId, @RequestBody Task updatedTask) {
-
+    public ResponseEntity<Task> updateTaskForUser(@PathVariable Long userId, @PathVariable Long taskId,
+                                                  @RequestBody Task updatedTask) {
         Optional<User> optionalUser = userService.getUserById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            // the problem is this line. It results into us getting an empty list.
+            // Get the tasks for the user
             List<Task> tasks = taskService.getTasksByUserId(userId);
 
             Optional<Task> optionalTask = tasks.stream().filter(task -> {
@@ -90,10 +83,9 @@ public class TaskController {
                 return task.getId().equals(taskId);
             }).findFirst();
 
-
             if (optionalTask.isPresent()) {
                 Task task = optionalTask.get();
-                // Update the task properties
+                // Update the task properties with the provided values
                 task.setName(updatedTask.getName());
                 task.setStatus(updatedTask.getStatus());
                 task.setComment(updatedTask.getComment());
@@ -109,8 +101,7 @@ public class TaskController {
         }
     }
 
-
-    // http://localhost:8080/api/tasks/user/1/7 This deletes the task with the id of 7 inside the user with the id of 1.
+    // This method handles the HTTP DELETE request to delete a task by its ID
     @DeleteMapping("/user/{userId}/{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
         Optional<Task> optionalTask = taskService.getTaskById(taskId);
@@ -122,6 +113,7 @@ public class TaskController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 

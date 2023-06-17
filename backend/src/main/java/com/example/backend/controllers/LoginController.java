@@ -25,24 +25,30 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
 
-
+    // This method retrieves a user from the UserRepository based on the provided email.
     public User getUserByEmail(String email) {
         return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
+
+    // This method handles the HTTP POST request to the "/" endpoint for user login.
     @PostMapping("/")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
         try {
+            // Authenticate the user using the AuthenticationService.
             boolean isAuthenticated = authenticationService.authenticate(email, password);
 
             if (isAuthenticated) {
                 // Authentication successful
+                // Retrieve the user from the UserRepository using the provided email.
                 User user = getUserByEmail(email);
+                // Create UserDetails object from the retrieved user.
                 UserDetails userDetails = new CustomUserDetails(user);
+                // Generate a token using the AuthenticationService.
                 String token = authenticationService.generateToken(userDetails);
-                return ResponseEntity.ok(token);
+                return ResponseEntity.ok(token); // Return the token in the response body.
             } else {
                 // Authentication failed
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
@@ -55,6 +61,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
+
 
 
 }
