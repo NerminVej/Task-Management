@@ -1,8 +1,8 @@
 import React from "react";
-import RegistrationPage from "./components/RegistrationPage";
-import LoginPage from "./components/LoginPage";
-import TaskCreationPage from "./components/TaskCreationPage";
-import TaskManagementDashboard from "./components/TaskManagementDashboard";
+import RegistrationPage from "./components/pages/RegistrationPage";
+import LoginPage from "./components/pages/LoginPage";
+import TaskCreationPage from "./components/pages/TaskCreationPage";
+import TaskManagementDashboard from "./components/pages/TaskManagementDashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

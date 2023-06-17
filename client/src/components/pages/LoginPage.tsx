@@ -1,11 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { login } from "../config/api";
+import { login } from "../../config/api";
 import TaskCreationPage from "./TaskCreationPage";
 import TaskManagementDashboard from "./TaskManagementDashboard";
 import RegistrationPage from "./RegistrationPage";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/taskCreationStyling.css";
+import "../../styles/taskCreationStyling.css";
 
 interface LoginForm {
   email: string;

@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
+import PasswordStrengthIndicator from "../helper/PasswordStrengthIndicator";
 import LoginPage from "./LoginPage";
-import { signup, login } from "../config/api";
-import FormField from "./FormField";
+import { signup, login } from "../../config/api";
+import FormField from "../common/FormField";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

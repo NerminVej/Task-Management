@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { createTask, getUserIdByEmail } from "../config/api";
-import ValidationErrors from "./ValidationErrors";
-import "../styles/taskCreationStyling.css";
+import { createTask, getUserIdByEmail } from "../../config/api";
+import ValidationErrors from "../errors/ValidationErrors";
+import "../../styles/taskCreationStyling.css";
 
 import LoginPage from "./LoginPage";
 

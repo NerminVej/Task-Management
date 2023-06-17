@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
-import CustomNotification from "./CustomNotification";
+import CustomNotification from "../notifications/CustomNotification";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { calculateProgress } from "../config/taskUtils";
+import { calculateProgress } from "../../config/taskUtils";
 import {
   handleDeleteTask,
   handleChange,
   updateTask,
   assignTask,
-} from "./helper/ChangeFunctionHelper";
+} from "../helper/ChangeFunctionHelper";
 
-import TaskRow from "./TaskRow";
+import TaskRow from "../tasks/TaskRow";
 import {
   getTasksByUserId,
   getUserIdByEmail,
   deleteTask,
   updateTaskStatus,
-} from "../config/api";
-import "../styles/tailwind.css";
-import "../styles/dashboardStyle.css";
-import TableHeader from "./TableHeader";
+} from "../../config/api";
+import "../../styles/tailwind.css";
+import "../../styles/dashboardStyle.css";
+import TableHeader from "../tasks/TableHeader";
 
 interface Task {
   id: number;
