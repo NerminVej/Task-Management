@@ -24,41 +24,6 @@ interface Notification {
   timestamp: string;
 }
 
-export function addNotification(
-  message: string,
-  type: string,
-  taskTitle: string,
-  notifications: Notification[],
-  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
-) {
-  const newNotification: Notification = {
-    id: Date.now(),
-    message,
-    type,
-    timestamp: new Date().toLocaleString(),
-  };
-
-  setNotifications((prevNotifications) => {
-    const existingNotification = prevNotifications.find(
-      (notification) => notification.message === message
-    );
-
-    if (existingNotification) {
-      return prevNotifications;
-    } else {
-      const updatedNotifications = [...prevNotifications, newNotification];
-      setTimeout(() => {
-        setNotifications((prevNotifications) =>
-          prevNotifications.filter(
-            (notification) => notification.id !== newNotification.id
-          )
-        );
-      }, 5000);
-      return updatedNotifications;
-    }
-  });
-}
-
 export function assignTask(
   setTaskList: React.Dispatch<React.SetStateAction<Task[]>>,
   addNotification: (message: string, type: string, taskTitle: string) => void
@@ -73,8 +38,8 @@ export function assignTask(
     timeTracking: 0,
   };
 
-  setTaskList((prevTasks) => [...prevTasks, assignedTask]);
-  addNotification("Task assigned to you.", "info", assignedTask.title);
+  setTaskList((prevTasks) => [...prevTasks, assignedTask]); // Add the assigned task to the task list
+  addNotification("Task assigned to you.", "info", assignedTask.title); // Notify about the task assignment
 }
 
 export function updateTask(
@@ -93,58 +58,7 @@ export function updateTask(
       return task;
     })
   );
-  addNotification("Task updated.", "success", "Updated Task");
-}
-
-export function handleStatusChange(
-  id: number,
-  status: string,
-  taskData: { name: string; time: string; comment: string },
-  userId: number,
-  taskList: Task[],
-  setTaskList: React.Dispatch<React.SetStateAction<Task[]>>,
-  setTaskProgress: React.Dispatch<React.SetStateAction<{ [taskId: number]: number }>>,
-  addNotification: (message: string, type: string, taskTitle: string) => void
-) {
-  setTaskList((prevTasks) =>
-    prevTasks.map((task) => {
-      if (task.id === id && task.status !== status) {
-        const progress = calculateProgress(status);
-
-        updateTaskStatus(
-          userId,
-          task.id,
-          status,
-          taskData.name,
-          taskData.time,
-          taskData.comment
-        )
-          .then(() => {
-            const updatedTask = { ...task, status, progress };
-            setTaskProgress((prevProgress) => ({
-              ...prevProgress,
-              [id]: progress,
-            }));
-            addNotification(
-              `Task "${taskData.name}" status changed to ${status}.`,
-              "success",
-              taskData.name
-            );
-            return updatedTask;
-          })
-          .then((updatedTask) => {
-            setTaskList((prevTasks) =>
-              prevTasks.map((task) => (task.id === id ? updatedTask : task))
-            );
-          })
-          .catch((error) => {
-            console.error("Failed to update task status:", error);
-            return task;
-          });
-      }
-      return task;
-    })
-  );
+  addNotification("Task updated.", "success", "Updated Task"); // Notify about the task update
 }
 
 export function handleChange(
@@ -164,7 +78,7 @@ export function handleChange(
     time: time,
     comment: comment,
   };
-  handleStatusChange(id, status, taskData);
+  handleStatusChange(id, status, taskData); // Handle the status change
 }
 
 export function handleDeleteTask(
@@ -174,14 +88,16 @@ export function handleDeleteTask(
   setTaskList: React.Dispatch<React.SetStateAction<Task[]>>,
   addNotification: (message: string, type: string, taskTitle: string) => void,
   setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>,
-  setNotificationTimeout: React.Dispatch<React.SetStateAction<NodeJS.Timeout | null>>
+  setNotificationTimeout: React.Dispatch<
+    React.SetStateAction<NodeJS.Timeout | null>
+  >
 ) {
   deleteTask(userId, taskId)
     .then((response) => {
       setTaskList((prevTasks) =>
         prevTasks.filter((task) => task.id !== taskId)
       );
-      addNotification(`Task "${taskTitle}" deleted.`, "success", taskTitle);
+      addNotification(`Task "${taskTitle}" deleted.`, "success", taskTitle); // Notify about the task deletion
       const timeoutId = setTimeout(() => {
         setNotifications((prevNotifications) =>
           prevNotifications.filter(
@@ -197,7 +113,6 @@ export function handleDeleteTask(
         `Failed to delete task "${taskTitle}".`,
         "error",
         taskTitle
-      );
+      ); // Notify about the task deletion failure
     });
-    
 }
