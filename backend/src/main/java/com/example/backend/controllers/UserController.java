@@ -20,22 +20,19 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
     @Autowired
     private AuthenticationService authenticationService;
 
-    private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
-    //@Autowired
     public UserController(UserService userService, UserRepository userRepository, TaskRepository taskRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
     }
 
-
-
+    // This method handles the HTTP POST request for user login
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam("email") String email,
                                         @RequestParam("password") String password) {
@@ -59,12 +56,14 @@ public class UserController {
         }
     }
 
+    // This method handles the HTTP GET request to retrieve all users
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
+    // This method handles the HTTP GET request to retrieve a user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> userOptional = userService.getUserById(id);
@@ -76,8 +75,7 @@ public class UserController {
         }
     }
 
-    // Example: http://localhost:8080/api/users/2/tasks this one creates a task for the user with the id 2.
-    // Get all tasks for a specific user
+    // This method handles the HTTP GET request to retrieve all tasks for a specific user
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<List<Task>> getUserTasks(@PathVariable Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -90,18 +88,14 @@ public class UserController {
         }
     }
 
-
-
-
+    // This method handles the HTTP POST request to register a new user
     @PostMapping("/")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User user) {
         User createdUser = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-
-    // Create a new task for a specific user
-    // Example http://localhost:8080/api/users/2/tasks
+    // This method handles the HTTP POST request to create a new task for a specific user
     @PostMapping("/{userId}/tasks")
     public ResponseEntity<Task> createTask(@PathVariable Long userId, @RequestBody Task task) {
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -115,18 +109,14 @@ public class UserController {
         }
     }
 
-
-
+    // This method handles the HTTP DELETE request to delete a user by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 
-
-
-    // This GetMapping gets the UserId of a user.
-    // Example: http://localhost:8080/api/email/bob@example.com gives me the userId of bob@example.com
+    // This method handles the HTTP GET request to retrieve the user ID by email
     @GetMapping("/email/{email:.+}")
     public ResponseEntity<Long> getUserIdByEmail(@PathVariable("email") String email) {
         Optional<User> optionalUser = userService.findByEmail(email);
@@ -137,6 +127,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 

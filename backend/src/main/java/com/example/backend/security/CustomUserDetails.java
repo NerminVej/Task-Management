@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
 
-    private User user; // Replace 'User' with your actual user entity class
+    private User user;
 
     public CustomUserDetails(User user) {
         this.user = user;
@@ -18,7 +18,6 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Return the user's authorities/roles
-        // You can define and manage authorities/roles in your application as needed
         return Collections.emptyList();
     }
 
@@ -34,25 +33,22 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        // Implement account expiration logic if needed
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        // Implement account locking logic if needed
+
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        // Implement credentials expiration logic if needed
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        // Implement user enabled/disabled logic if needed
         return true;
     }
 }

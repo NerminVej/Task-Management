@@ -116,6 +116,4 @@ public class AuthenticationService {
         System.out.println("Authentication failed");
         return false; // Authentication failed
     }
-
-
 }

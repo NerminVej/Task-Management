@@ -26,7 +26,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception ex) {
         // Create a custom error message or payload
@@ -35,4 +34,5 @@ public class GlobalExceptionHandler {
         // Return a ResponseEntity with the error message and appropriate HTTP status
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
+
 }

@@ -24,24 +24,24 @@ public class UserRepositoryTest {
 
     @Test
     public void testFindByEmailIgnoreCase() {
-        // Initialize Mockito annotations
+        // Initializes Mockito annotations
         MockitoAnnotations.openMocks(this);
 
-        // Create a sample email for testing
+        // Creates a sample email for testing
         String email = "john@example.com";
 
-        // Create a sample user with the given email
+        // Creates a sample user with the given email
         User user = new User();
         user.setEmail(email);
 
-        // Mock the behavior of the userRepository.findByEmailIgnoreCase method
+        // Mocks the behavior of the userRepository.findByEmailIgnoreCase method
         when(userRepository.findByEmailIgnoreCase(email)).thenReturn(Optional.of(user));
 
-        // Call the userRepository.findByEmailIgnoreCase method
+        // Calls the userRepository.findByEmailIgnoreCase method
         Optional<User> result = userRepository.findByEmailIgnoreCase(email);
         System.out.println("it found " + result);
 
-        // Verify the result
+        // Verifys the result
         assertEquals(Optional.of(user), result);
         assertNotNull(result.get().getId());
         assertNotNull(result.get().getUsername());
