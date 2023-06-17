@@ -3,6 +3,8 @@ import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 import LoginPage from "./LoginPage";
 import { signup, login } from "../config/api";
 import FormField from "./FormField";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegistrationPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -19,25 +21,27 @@ const RegistrationPage: React.FC = () => {
         checkPasswordStrength(password) === "strong")
     ) {
       signup(name, email, password)
-        .then((response) => {
-          console.log("Signup successful");
+        .then(() => {
+          toast.success("Signup successful"); // Display success toast
           handleLogin();
         })
         .catch((error) => {
+          toast.error("Signup failed. Please try again."); // Display error toast
           console.error("Signup failed:", error);
         });
     } else {
-      console.log("Invalid Credentials");
+      toast.error("Invalid credentials"); // Display error toast
     }
   };
 
   const handleLogin = () => {
     login(email, password)
       .then(() => {
-        console.log("Login successful");
+        toast.success("Login successful"); // Display success toast
         window.location.reload(); // Refresh the page to log in the user
       })
       .catch((error) => {
+        toast.error("Login failed. Please try again."); // Display error toast
         console.error("Login failed:", error);
       });
   };
@@ -82,8 +86,9 @@ const RegistrationPage: React.FC = () => {
     // Define your criteria for password strength
     const weakRegex = /^(?=.*[A-Za-z]).{6,}$/;
     const goodRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$/;
-    const strongRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{10,}$/;
-  
+    const strongRegex =
+      /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{10,}$/;
+
     if (strongRegex.test(password)) {
       return "strong";
     } else if (goodRegex.test(password)) {
@@ -94,26 +99,42 @@ const RegistrationPage: React.FC = () => {
       return ""; // or handle the case when the password doesn't meet any criteria
     }
   };
-  
 
   const isEmailValid = (email: string): boolean => {
     // Simple email validation using a regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleFormSubmit} className="p-4 bg-white rounded-md shadow-md">
+      <form
+        onSubmit={handleFormSubmit}
+        className="p-4 bg-white rounded-md shadow-md"
+      >
         <div className="space-y-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Sign up for the Task Management Application
           </h1>
 
-          <FormField label="Name" type="text" value={name} onChange={handleNameChange} />
-          <FormField label="Email" type="email" value={email} onChange={handleEmailChange} />
-          <FormField label="Password" type="password" value={password} onChange={handlePasswordChange} />
+          <FormField
+            label="Name"
+            type="text"
+            value={name}
+            onChange={handleNameChange}
+          />
+          <FormField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <FormField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
           <FormField
             label="Confirm Password"
             type="password"
@@ -126,7 +147,6 @@ const RegistrationPage: React.FC = () => {
               {updatePasswordStrengthIndicator(passwordStrength)}
             </div>
           )}
-          
 
           <div className="flex items-center justify-between">
             <button

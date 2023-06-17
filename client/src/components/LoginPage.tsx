@@ -3,6 +3,10 @@ import { login } from "../config/api";
 import TaskCreationPage from "./TaskCreationPage";
 import TaskManagementDashboard from "./TaskManagementDashboard";
 import RegistrationPage from "./RegistrationPage";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/taskCreationStyling.css";
+
 
 interface LoginForm {
   email: string;
@@ -33,15 +37,18 @@ const LoginPage: React.FC = () => {
 
       if (response.status === 200) {
         // Login successful, perform any necessary actions (e.g., redirect to dashboard)
+        toast.success("Login Successful"); // Display success toast
         console.log("Login successful");
         setLoggedInEmail(loginForm.email); // Store the logged-in email
         setShowTaskCreationPage(true); // Show the TaskCreationPage
       } else {
         // Login failed, display an error message or handle the failure appropriately
+        toast.error("Login Failed"); // Display error toast
         console.log("Login failed");
       }
     } catch (error) {
       console.error("Error occurred during login:", error);
+      toast.error("Error occurred during login"); // Display error toast
       // Handle the error appropriately (e.g., display an error message)
     }
   };
@@ -131,22 +138,21 @@ const LoginPage: React.FC = () => {
       {showRegistrationPage && <RegistrationPage />}
 
       {loggedInEmail && showTaskCreationPage && (
-  <div>
-    <TaskManagementDashboard email={loggedInEmail as string} />
-    <div className="flex flex-col items-center mt-4">
-      <TaskCreationPage email={loggedInEmail as string} />
+        <div>
+          <TaskManagementDashboard email={loggedInEmail as string} />
+          <div className="flex flex-col items-center mt-4">
+            <TaskCreationPage email={loggedInEmail as string} />
 
-      <button
-        type="button"
-        className="btn bg-red-500 text-white font-medium px-4 py-2 mt-4 rounded-md shadow-md hover:bg-red-600"
-        onClick={handleLogout}
-      >
-        Sign Out
-      </button>
-    </div>
-  </div>
-)}
-
+            <button
+              type="button"
+              className="btn bg-red-500 text-white font-medium px-4 py-2 mt-4 rounded-md shadow-md hover:bg-red-600"
+              onClick={handleLogout}
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
