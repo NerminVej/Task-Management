@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { createTask, getUserIdByEmail } from "../config/api";
+import ValidationErrors from "./ValidationErrors";
+import "../styles/taskCreationStyling.css";
+
 import LoginPage from "./LoginPage";
 
 interface TaskCreationPageProps {
   email: string;
 }
 
+interface FormValues {
+  taskName: string;
+  status: string;
+  comment: string;
+  time: string;
+}
+
 const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
-  const [taskName, setTaskName] = useState<string>("");
-  const [status, setStatus] = useState<string>("Pending");
-  const [comment, setComment] = useState<string>("");
-  const [time, setTime] = useState<string>("");
+  const [formValues, setFormValues] = useState<FormValues>({
+    taskName: "",
+    status: "Pending",
+    comment: "",
+    time: "",
+  });
   const [errors, setErrors] = useState<string[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchUserId = async () => {
+    const fetchData = async () => {
       try {
         const response = await getUserIdByEmail(email);
         const id = response.data;
@@ -24,15 +36,13 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
       } catch (error) {
         console.error("Failed to fetch user ID:", error);
       }
+
+      const sessionToken = localStorage.getItem("sessionToken");
+      setIsLoggedIn(!!sessionToken);
     };
 
-    fetchUserId();
+    fetchData();
   }, [email]);
-
-  useEffect(() => {
-    const sessionToken = localStorage.getItem("sessionToken");
-    setIsLoggedIn(!!sessionToken);
-  }, []);
 
   const handleLogin = (token: string) => {
     localStorage.setItem("sessionToken", token);
@@ -44,110 +54,87 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
     setIsLoggedIn(false);
   };
 
-  const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTaskName(event.target.value);
-  };
-
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(event.target.value);
-  };
-
-  const handleCommentChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
-    setComment(event.target.value);
-  };
-
-  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTime(event.target.value);
+    const { name, value } = event.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrors([]);
 
-    const validationErrors: string[] = [];
+    const { taskName, time } = formValues;
+    const parsedTime = Date.parse(time);
 
     if (!taskName.trim()) {
-      validationErrors.push("Task name is required");
+      setErrors(["Task name is required"]);
+      return;
     }
 
-    if (!time) {
-      validationErrors.push("Time is required");
-    } else {
-      const parsedTime = Date.parse(time);
-      if (isNaN(parsedTime)) {
-        validationErrors.push("Please enter a valid time");
-      }
+    if (!time || isNaN(parsedTime)) {
+      setErrors(["Please enter a valid time"]);
+      return;
     }
 
     if (!userId) {
-      validationErrors.push("User ID not found");
-    }
-
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors);
+      setErrors(["User ID not found"]);
       return;
     }
 
     try {
-      await createTask(taskName, status, comment, time, userId || 0);
-      setTaskName("");
-      setStatus("Pending");
-      setComment("");
-      setTime("");
+      await createTask(
+        taskName,
+        formValues.status,
+        formValues.comment,
+        time,
+        userId || 0
+      );
+      setFormValues({ taskName: "", status: "Pending", comment: "", time: "" });
     } catch (error) {
       console.error("Failed to create task:", error);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-md shadow-md">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Task</h2>
+    <div className="flex flex-container">
+      <div className="form-container">
+        <h2 className="form-title">Create Task</h2>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
-          {errors.length > 0 && (
-            <div className="mb-4">
-              {errors.map((error, index) => (
-                <p key={index} className="text-red-500">
-                  {error}
-                </p>
-              ))}
-            </div>
-          )}
+          {errors.length > 0 && <ValidationErrors errors={errors} />}
 
           <div className="mb-4">
-            <label
-              htmlFor="taskName"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
+            <label htmlFor="taskName" className="form-label">
               Task Name
             </label>
             <input
               type="text"
               id="taskName"
               name="taskName"
-              className="input input-bordered w-full px-4 py-2"
+              className="form-input"
               placeholder="Enter task name"
-              value={taskName}
-              onChange={handleTaskNameChange}
+              value={formValues.taskName}
+              onChange={handleChange}
             />
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="priority"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
+            <label htmlFor="status" className="form-label">
               Status
             </label>
             <select
-              id="priority"
-              name="priority"
+              id="status"
+              name="status"
               className="input input-bordered w-full px-4 py-2"
-              value={status}
-              onChange={handleStatusChange}
+              value={formValues.status}
+              onChange={handleChange}
             >
               <option value="Pending">Pending</option>
               <option value="In Progress">In Progress</option>
@@ -155,38 +142,32 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="Comment"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
+            <label htmlFor="comment" className="form-label">
               Comment
             </label>
             <textarea
               id="comment"
               name="comment"
               rows={4}
-              className="input input-bordered w-full px-4 py-2 h-24"
+              className="form-textarea"
               placeholder="Enter task comment"
-              value={comment}
-              onChange={handleCommentChange}
+              value={formValues.comment}
+              onChange={handleChange}
             ></textarea>
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="taskTime"
-              className="block text-sm font-medium text-gray-700 text-left"
-            >
+            <label htmlFor="taskTime" className="form-label">
               When do you want this task to be done?
             </label>
             <input
               type="datetime-local"
               id="taskTime"
-              name="taskTime"
-              className="input input-bordered w-full px-4 py-2"
+              name="time"
+              className="form-input"
               placeholder="Enter time amount"
-              value={time}
-              onChange={handleTimeChange}
+              value={formValues.time}
+              onChange={handleChange}
               min={new Date()
                 .toLocaleString("sv-SE", { timeZone: "Europe/Berlin" })
                 .slice(0, 16)}
@@ -194,13 +175,9 @@ const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
           </div>
 
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="btn bg-primary text-white font-medium px-4 py-2 rounded-md shadow-md hover:bg-primary"
-            >
+            <button type="submit" className="form-button form-button:hover">
               Create Task
             </button>
-            
           </div>
         </form>
       </div>

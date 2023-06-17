@@ -118,66 +118,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     }
   }, [email, userId]);
   
-  /*
-  // Gets the userID when the page loads. We need it for our backend.
-  useEffect(() => {
-    // Fetch the user ID based on the email
-    getUserIdByEmail(email)
-      .then((response) => {
-        const responseData = response.data;
-        const userId = responseData;
-
-        if (userId) {
-          setUserId(userId);
-          console.log("The user id is: " + userId);
-        } else {
-          console.error(
-            "Failed to get user ID. Invalid response:",
-            responseData
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to get user ID:", error);
-      });
-  }, [email]);
-
-  // Fetches all of our tasks that a user holds on the backend.
-  useEffect(() => {
-    if (userId) {
-      // Fetch tasks for the user
-      getTasksByUserId(userId)
-        .then((response) => {
-          const tasksData = response.data;
-          // Update task list by including the name property
-          const updatedTaskList = tasksData.map((taskData: TaskData) => {
-            const progress = calculateProgress(taskData.status);
-            return {
-              id: taskData.id,
-              title: taskData.name,
-              status: taskData.status,
-              comment: taskData.comment || "",
-              attachments: taskData.attachments,
-              timeTracking: taskData.time,
-              // Responsible for handling that the progress bar gets changed when logging in.
-              progress: progress,
-            };
-          });
-          setTaskList(updatedTaskList);
-
-          // Update the task progress
-          const updatedTaskProgress: { [taskId: number]: number } = {};
-          updatedTaskList.forEach((task: Task) => {
-            updatedTaskProgress[task.id] = task.progress;
-          });
-          setTaskProgress(updatedTaskProgress);
-        })
-        .catch((error) => {
-          console.error("Failed to get tasks:", error);
-        });
-    }
-  }, [userId]);
-  */
+ 
 
   const addNotification = (
     message: string,
@@ -276,6 +217,67 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
       })
     );
   };
+
+   /*
+  // Gets the userID when the page loads. We need it for our backend.
+  useEffect(() => {
+    // Fetch the user ID based on the email
+    getUserIdByEmail(email)
+      .then((response) => {
+        const responseData = response.data;
+        const userId = responseData;
+
+        if (userId) {
+          setUserId(userId);
+          console.log("The user id is: " + userId);
+        } else {
+          console.error(
+            "Failed to get user ID. Invalid response:",
+            responseData
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get user ID:", error);
+      });
+  }, [email]);
+
+  // Fetches all of our tasks that a user holds on the backend.
+  useEffect(() => {
+    if (userId) {
+      // Fetch tasks for the user
+      getTasksByUserId(userId)
+        .then((response) => {
+          const tasksData = response.data;
+          // Update task list by including the name property
+          const updatedTaskList = tasksData.map((taskData: TaskData) => {
+            const progress = calculateProgress(taskData.status);
+            return {
+              id: taskData.id,
+              title: taskData.name,
+              status: taskData.status,
+              comment: taskData.comment || "",
+              attachments: taskData.attachments,
+              timeTracking: taskData.time,
+              // Responsible for handling that the progress bar gets changed when logging in.
+              progress: progress,
+            };
+          });
+          setTaskList(updatedTaskList);
+
+          // Update the task progress
+          const updatedTaskProgress: { [taskId: number]: number } = {};
+          updatedTaskList.forEach((task: Task) => {
+            updatedTaskProgress[task.id] = task.progress;
+          });
+          setTaskProgress(updatedTaskProgress);
+        })
+        .catch((error) => {
+          console.error("Failed to get tasks:", error);
+        });
+    }
+  }, [userId]);
+  */
 
     /*
   const assignTask = () => {
