@@ -1,6 +1,8 @@
 
 ## Introduction
 
+![[Task Management Showcase.png]]
+
 This is a Task Management CRUD application
 
 Technologies I used for this project are:
