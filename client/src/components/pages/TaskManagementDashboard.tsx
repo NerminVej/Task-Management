@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, ReactNode  } from "react";
 import CustomNotification from "../notifications/CustomNotification";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +21,8 @@ import {
 import "../../styles/tailwind.css";
 import "../../styles/dashboardStyle.css";
 import TableHeader from "../tasks/TableHeader";
+
+const MyTasksContext = React.createContext([]);
 
 // Interface for a Task object
 interface Task {
@@ -57,9 +59,24 @@ interface TaskData {
   attachments: string[] | null;
 }
 
+
+
+
+interface MyTasksContextType {
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}
+
+interface MyTasksProviderProps {
+  children: ReactNode;
+}
+
+
 const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   email,
 }) => {
+
+
   const [taskList, setTaskList] = useState<Task[]>([]); // State to store the list of tasks
   const [notifications, setNotifications] = useState<Notification[]>([]); // State to store the notifications
   const [notificationTimeout, setNotificationTimeout] =
@@ -70,6 +87,8 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   }>(
     {} // State to track the progress of each task
   );
+
+  
 
   useEffect(() => {
     // Fetch the user ID based on the email
@@ -294,5 +313,9 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     </div>
   );
 };
+
+
+
+
 
 export default TaskManagementDashboard;

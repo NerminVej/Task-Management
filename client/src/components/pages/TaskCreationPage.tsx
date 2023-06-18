@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { createTask, getUserIdByEmail } from "../../config/api";
 import ValidationErrors from "../errors/ValidationErrors";
 import "../../styles/taskCreationStyling.css";
-
 import LoginPage from "./LoginPage";
 
 interface TaskCreationPageProps {
@@ -17,6 +16,9 @@ interface FormValues {
 }
 
 const TaskCreationPage: React.FC<TaskCreationPageProps> = ({ email }) => {
+
+
+
   // State variables
   const [formValues, setFormValues] = useState<FormValues>({
     taskName: "",

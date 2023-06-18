@@ -6,6 +6,8 @@ import RegistrationPage from "./RegistrationPage";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/taskCreationStyling.css";
+import { Provider } from "react-redux";
+import store from "../../store";
 
 interface LoginForm {
   email: string;
@@ -130,7 +132,8 @@ const LoginPage: React.FC = () => {
 
       {/* Render the dashboard and task creation page if logged in */}
       {loggedInEmail && showTaskCreationPage && (
-        <div>
+            
+        <div>    
           <TaskManagementDashboard email={loggedInEmail as string} />
           <div className="flex flex-col items-center mt-4">
             <TaskCreationPage email={loggedInEmail as string} />
