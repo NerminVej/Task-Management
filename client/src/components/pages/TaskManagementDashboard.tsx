@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, ReactNode  } from "react";
+import React, { useState, useEffect, useContext, ReactNode } from "react";
 import CustomNotification from "../notifications/CustomNotification";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -59,9 +59,6 @@ interface TaskData {
   attachments: string[] | null;
 }
 
-
-
-
 interface MyTasksContextType {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -71,12 +68,9 @@ interface MyTasksProviderProps {
   children: ReactNode;
 }
 
-
 const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
   email,
 }) => {
-
-
   const [taskList, setTaskList] = useState<Task[]>([]); // State to store the list of tasks
   const [notifications, setNotifications] = useState<Notification[]>([]); // State to store the notifications
   const [notificationTimeout, setNotificationTimeout] =
@@ -88,9 +82,7 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
     {} // State to track the progress of each task
   );
 
-  
-
-  useEffect(() => {
+  const fetchTasks = () => {
     // Fetch the user ID based on the email
     getUserIdByEmail(email)
       .then((response) => {
@@ -141,7 +133,15 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           console.error("Failed to get tasks:", error);
         });
     }
+  };
+
+  useEffect(() => {
+    fetchTasks();
   }, [email, userId]);
+
+  const handleReload = () => {
+    fetchTasks();
+  };
 
   const addNotification = (
     message: string,
@@ -310,12 +310,16 @@ const TaskManagementDashboard: React.FC<TaskCreationPageProps> = ({
           ))}
         </tbody>
       </table>
+      <div>
+        <button
+          onClick={handleReload}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded mt-8 text-lg"
+        >
+          Reload
+        </button>
+      </div>
     </div>
   );
 };
-
-
-
-
 
 export default TaskManagementDashboard;

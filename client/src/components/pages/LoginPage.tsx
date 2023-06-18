@@ -132,15 +132,14 @@ const LoginPage: React.FC = () => {
 
       {/* Render the dashboard and task creation page if logged in */}
       {loggedInEmail && showTaskCreationPage && (
-            
-        <div>    
+        <div>
           <TaskManagementDashboard email={loggedInEmail as string} />
           <div className="flex flex-col items-center mt-4">
             <TaskCreationPage email={loggedInEmail as string} />
 
             <button
               type="button"
-              className="btn bg-red-500 text-white font-medium px-4 py-2 mt-4 rounded-md shadow-md hover:bg-red-600"
+              className="bg-red-500 form-button rounded-md shadow-md hover:bg-red-600"
               onClick={handleLogout}
             >
               Sign Out
