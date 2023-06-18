@@ -1,6 +1,7 @@
 
 ## Introduction
 
+![[Task Management Showcase.png]]
 
 This is a Task Management CRUD application
 
