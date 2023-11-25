@@ -15,7 +15,7 @@ Technologies I used for this project are:
 
 React JS + Java Spring Boot are the programming languages of choice.
 
-This project shows my understanding of using industry standard technologies inside of a simple CRUD application.
+This project shows my understanding of using industry standard technologies inside of a simple CRUD application with a login functionality using Spring Security.
 
 
 ## Setup:
